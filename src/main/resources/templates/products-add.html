@@ -12,15 +12,15 @@
     <main layout:fragment="content">
       <div class="container mt-5">
         <h1>Add New Product</h1>
-        <form method="post" action="/products">
+        <form method="post" action="/products" enctype="multipart/form-data">
           <div class="mb-3">
-            <label for="name" class="form-label">Product Name</label>
+            <label for="title" class="form-label">Product Title</label>
             <input
               type="text"
               class="form-control"
-              id="name"
-              name="name"
-              placeholder="Enter product name"
+              id="title"
+              name="title"
+              placeholder="Enter product title"
             />
           </div>
           <div class="mb-3">
@@ -39,23 +39,70 @@
               class="form-control"
               id="price"
               name="price"
-              min="0.01"
-              step="0.01"
+              min="0.00"
+              step="0.10"
             />
           </div>
           <div class="mb-3">
-            <label for="image" class="form-label">Product Image URL</label>
+            <label for="image" class="form-label d-block">Product Image</label>
+            <img
+              id="previewImage"
+              src=""
+              alt="No image selected"
+              class="mb-3"
+            />
             <input
-              type="url"
+              type="file"
               class="form-control"
               id="image"
               name="image"
-              placeholder="Enter image URL"
+              placeholder="Upload image"
+              accept="image/*"
             />
           </div>
+          <div class="mb-3">
+            <p class="mb-1">Condition</p>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="condition"
+                id="condition_used"
+                value="used"
+                checked
+              />
+              <label class="form-check-label" for="condition_used">Used</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="condition"
+                id="condition_like_new"
+                value="like_new"
+              />
+              <label class="form-check-label" for="condition_like_new"
+                >Like new</label
+              >
+            </div>
+          </div>
+          <div class="mb-3">
+            <select class="form-select" aria-label="Default select example">
+              <option selected>Select a category</option>
+              <option
+                th:each="category : ${availableCategories}"
+                th:value="${category.title}"
+                th:text="${category.title}"
+              ></option>
+            </select>
+          </div>
+
           <button type="submit" class="btn btn-primary">Add Product</button>
         </form>
       </div>
     </main>
   </body>
+  <div layout:fragment="scripts">
+    <script type="text/javascript" th:src="@{/js/products-add.js}"></script>
+  </div>
 </html>
