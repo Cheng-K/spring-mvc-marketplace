@@ -1,5 +1,7 @@
 package com.chengk.springmvcmarketplace.domain;
 
 public interface DtoConverter<T, U> {
-    public U convert(T element);
+    public U convertToDto(T element);
+
+    public T convertToEntity(U element);
 }

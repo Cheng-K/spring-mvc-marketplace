@@ -18,16 +18,23 @@ public class ProductDtoConverter implements DtoConverter<Products, ProductDto> {
     }
 
     @Override
-    public ProductDto convert(Products element) {
+    public ProductDto convertToDto(Products element) {
         Categories category = categoryRepository.findById(element.getCategoryId()).orElse(null);
         return new ProductDto(
                 element.getId(),
                 element.getTitle(),
                 element.getDescription(),
-                new CategoryDto(category.getId(), category.getTitle()),
+                new CategoryDto(category.getId(), category.getTitle(), category.getCreatedOn(),
+                        category.getLastUpdated()),
                 element.getListedOn(),
                 element.getCondition(),
                 element.getImages());
+    }
+
+    @Override
+    public Products convertToEntity(ProductDto element) {
+        return new Products(element.getId(), element.getTitle(), element.getDescription(),
+                element.getCategory().getId(), element.getListedOn(), element.getCondition(), element.getImage());
     }
 
 }
