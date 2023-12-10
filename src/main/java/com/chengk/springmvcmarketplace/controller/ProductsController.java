@@ -7,7 +7,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.chengk.springmvcmarketplace.domain.CategoryService;
 import com.chengk.springmvcmarketplace.domain.ProductsService;
+import com.chengk.springmvcmarketplace.model.dto.CategoryDto;
 import com.chengk.springmvcmarketplace.model.dto.ProductDto;
 
 @Controller
@@ -15,9 +17,11 @@ import com.chengk.springmvcmarketplace.model.dto.ProductDto;
 public class ProductsController {
 
     private ProductsService productsService;
+    private CategoryService categoryService;
 
-    public ProductsController(ProductsService productsService) {
+    public ProductsController(ProductsService productsService, CategoryService categoryService) {
         this.productsService = productsService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping
@@ -28,7 +32,9 @@ public class ProductsController {
     }
 
     @GetMapping("/add")
-    public String getAddProductsForm() {
+    public String getAddProductsForm(Model model) {
+        List<CategoryDto> categories = categoryService.getAllCategories();
+        model.addAttribute("availableCategories", categories);
         return "products-add";
     }
 
