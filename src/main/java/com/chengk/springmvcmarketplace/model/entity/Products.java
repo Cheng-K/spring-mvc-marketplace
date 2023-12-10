@@ -1,11 +1,8 @@
 package com.chengk.springmvcmarketplace.model.entity;
 
 import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
 import com.chengk.springmvcmarketplace.model.value_objects.Condition;
@@ -16,21 +13,20 @@ public class Products {
     private Integer id;
     private String title;
     private String description;
-    private Categories category;
+    private Integer categoryId;
     private Timestamp listedOn;
     private Condition condition;
-    @MappedCollection(idColumn = "product_id")
-    private Set<ProductImages> images = new HashSet<>();
+    private String image;
 
-    public Products(Integer id, String title, String description, Categories category, Timestamp listedOn,
-            Condition condition, Set<ProductImages> images) {
+    public Products(Integer id, String title, String description, Integer categoryId, Timestamp listedOn,
+            Condition condition, String image) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.category = category;
+        this.categoryId = categoryId;
         this.listedOn = listedOn;
         this.condition = condition;
-        this.images = images;
+        this.image = image;
     }
 
     public Integer getId() {
@@ -57,12 +53,12 @@ public class Products {
         this.description = description;
     }
 
-    public Categories getCategory() {
-        return category;
+    public Integer getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(Categories category) {
-        this.category = category;
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
     public Timestamp getListedOn() {
@@ -81,12 +77,12 @@ public class Products {
         this.condition = condition;
     }
 
-    public Set<ProductImages> getImages() {
-        return images;
+    public String getImages() {
+        return image;
     }
 
-    public void setImages(Set<ProductImages> images) {
-        this.images = images;
+    public void setImages(String image) {
+        this.image = image;
     }
 
 }
