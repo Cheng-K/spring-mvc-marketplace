@@ -23,6 +23,7 @@ public class ProductDtoConverter implements DtoConverter<Products, ProductDto> {
         return new ProductDto(
                 element.getId(),
                 element.getTitle(),
+                element.getPrice(),
                 element.getDescription(),
                 new CategoryDto(category.getId(), category.getTitle(), category.getCreatedOn(),
                         category.getLastUpdated()),
@@ -33,7 +34,7 @@ public class ProductDtoConverter implements DtoConverter<Products, ProductDto> {
 
     @Override
     public Products convertToEntity(ProductDto element) {
-        return new Products(element.getId(), element.getTitle(), element.getDescription(),
+        return new Products(element.getId(), element.getTitle(), element.getPrice(), element.getDescription(),
                 element.getCategory().getId(), element.getListedOn(), element.getCondition(), element.getImage());
     }
 
