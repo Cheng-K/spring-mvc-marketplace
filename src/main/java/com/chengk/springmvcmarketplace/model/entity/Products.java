@@ -12,13 +12,14 @@ public class Products {
     @Id
     private Integer id;
     private String title;
+    private Double price;
     private String description;
     private Integer categoryId;
     private Timestamp listedOn;
     private Condition condition;
     private String image;
 
-    public Products(Integer id, String title, String description, Integer categoryId, Timestamp listedOn,
+    public Products(Integer id, String title, Double price, String description, Integer categoryId, Timestamp listedOn,
             Condition condition, String image) {
         this.id = id;
         this.title = title;
@@ -27,6 +28,7 @@ public class Products {
         this.listedOn = listedOn;
         this.condition = condition;
         this.image = image;
+        this.price = price;
     }
 
     public Integer getId() {
@@ -82,6 +84,22 @@ public class Products {
     }
 
     public void setImages(String image) {
+        this.image = image;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
         this.image = image;
     }
 

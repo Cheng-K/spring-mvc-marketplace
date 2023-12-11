@@ -2,24 +2,34 @@ package com.chengk.springmvcmarketplace.model.dto;
 
 import java.sql.Timestamp;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.chengk.springmvcmarketplace.model.value_objects.Condition;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ProductDto {
     private Integer id;
     private String title;
+    private Double price;
     private String description;
     private CategoryDto category;
     private Timestamp listedOn;
     private Condition condition;
     private String image;
+    @JsonIgnore
+    private MultipartFile imageFile;
 
     public ProductDto() {
     }
 
-    public ProductDto(Integer id, String title, String description, CategoryDto category, Timestamp listedOn,
+    public ProductDto(Integer id, String title, Double price, String description, CategoryDto category,
+            Timestamp listedOn,
             Condition condition, String image) {
         this.id = id;
         this.title = title;
+        this.price = price;
         this.description = description;
         this.category = category;
         this.listedOn = listedOn;
@@ -81,6 +91,33 @@ public class ProductDto {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public MultipartFile getImageFile() {
+        return imageFile;
+    }
+
+    public void setImageFile(MultipartFile imageFile) {
+        this.imageFile = imageFile;
+    }
+
+    @Override
+    public String toString() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "{}";
+        }
     }
 
 }
