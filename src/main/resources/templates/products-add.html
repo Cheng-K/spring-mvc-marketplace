@@ -12,23 +12,26 @@
     <main layout:fragment="content">
       <div class="container mt-5">
         <h1>Add New Product</h1>
-        <form method="post" action="/products" enctype="multipart/form-data">
+        <form
+          method="post"
+          th:action="@{/products/add}"
+          enctype="multipart/form-data"
+          th:object="${newProduct}"
+        >
           <div class="mb-3">
             <label for="title" class="form-label">Product Title</label>
             <input
               type="text"
               class="form-control"
-              id="title"
-              name="title"
               placeholder="Enter product title"
+              th:field="*{title}"
             />
           </div>
           <div class="mb-3">
             <label for="description" class="form-label">Description</label>
             <textarea
               class="form-control"
-              id="description"
-              name="description"
+              th:field="*{description}"
               rows="3"
             ></textarea>
           </div>
@@ -37,8 +40,7 @@
             <input
               type="number"
               class="form-control"
-              id="price"
-              name="price"
+              th:field="*{price}"
               min="0.00"
               step="0.10"
             />
@@ -48,14 +50,14 @@
             <img
               id="previewImage"
               src=""
+              th:src="*{image}"
               alt="No image selected"
               class="mb-3"
             />
             <input
               type="file"
               class="form-control"
-              id="image"
-              name="image"
+              th:field="*{imageFile}"
               placeholder="Upload image"
               accept="image/*"
             />
@@ -66,32 +68,36 @@
               <input
                 class="form-check-input"
                 type="radio"
-                name="condition"
-                id="condition_used"
-                value="used"
+                th:field="*{condition}"
+                th:value="used"
                 checked
               />
-              <label class="form-check-label" for="condition_used">Used</label>
+              <label class="form-check-label" th:for="${#ids.prev('condition')}"
+                >Used</label
+              >
             </div>
             <div class="form-check form-check-inline">
               <input
                 class="form-check-input"
                 type="radio"
-                name="condition"
-                id="condition_like_new"
-                value="like_new"
+                th:field="*{condition}"
+                th:value="like_new"
               />
-              <label class="form-check-label" for="condition_like_new"
+              <label class="form-check-label" th:for="${#ids.prev('condition')}"
                 >Like new</label
               >
             </div>
           </div>
           <div class="mb-3">
-            <select class="form-select" aria-label="Default select example">
-              <option selected>Select a category</option>
+            <p class="mb-1">Category</p>
+            <select
+              class="form-select"
+              aria-label="Default select example"
+              th:field="*{category}"
+            >
               <option
                 th:each="category : ${availableCategories}"
-                th:value="${category.title}"
+                th:value="${category}"
                 th:text="${category.title}"
               ></option>
             </select>
