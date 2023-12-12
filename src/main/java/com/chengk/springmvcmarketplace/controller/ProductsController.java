@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.chengk.springmvcmarketplace.domain.CategoryService;
@@ -35,7 +37,14 @@ public class ProductsController {
     public String getAddProductsForm(Model model) {
         List<CategoryDto> categories = categoryService.getAllCategories();
         model.addAttribute("availableCategories", categories);
+        model.addAttribute("newProduct", new ProductDto());
         return "products-add";
+    }
+
+    @PostMapping("/add")
+    public String postAddProductsForm(@ModelAttribute("newProduct") ProductDto productDto) {
+        productsService.addNewProduct(productDto);
+        return "redirect:/products";
     }
 
 }
