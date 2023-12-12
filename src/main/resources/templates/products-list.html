@@ -15,7 +15,7 @@
           <div class="col-md-4 mb-4" th:each="product : ${products}">
             <div class="card">
               <img
-                th:src="${product.image}"
+                th:src="@{/img/{imageFile}(imageFile=${product.image})}"
                 class="card-img-top"
                 alt="Product 1"
               />

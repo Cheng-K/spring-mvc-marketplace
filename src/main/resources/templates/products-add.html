@@ -69,7 +69,7 @@
                 class="form-check-input"
                 type="radio"
                 th:field="*{condition}"
-                th:value="used"
+                th:value="USED"
                 checked
               />
               <label class="form-check-label" th:for="${#ids.prev('condition')}"
@@ -81,7 +81,7 @@
                 class="form-check-input"
                 type="radio"
                 th:field="*{condition}"
-                th:value="like_new"
+                th:value="LIKE_NEW"
               />
               <label class="form-check-label" th:for="${#ids.prev('condition')}"
                 >Like new</label
