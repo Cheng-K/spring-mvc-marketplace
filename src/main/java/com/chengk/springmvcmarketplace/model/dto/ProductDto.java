@@ -4,21 +4,39 @@ import java.sql.Timestamp;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.chengk.springmvcmarketplace.domain.custom_validators.ValidImageFile;
 import com.chengk.springmvcmarketplace.model.value_objects.Condition;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 public class ProductDto {
     private Integer id;
+    @NotBlank(message = "Product title must not be blank")
+    @Size(max = 100, message = "Product title must not exceed 100 characters")
     private String title;
+    @DecimalMin(value = "0.0", message = "Product price must not be a negative decimal")
+    @DecimalMax(value = "9999.99", message = "Product price must not be greater than 9999")
+    @NotNull(message = "Product price must be specified")
     private Double price;
+    @NotBlank(message = "Product description must not be blank")
     private String description;
+    @NotNull
+    @Valid
     private CategoryDto category;
     private Timestamp listedOn;
+    @NotNull(message = "Product's condition must be specified")
     private Condition condition;
     private String image;
     @JsonIgnore
+    @ValidImageFile(message = "Product's image must be uploaded")
     private MultipartFile imageFile;
 
     public ProductDto() {

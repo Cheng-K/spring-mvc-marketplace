@@ -5,8 +5,11 @@ import java.sql.Timestamp;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class CategoryDto {
     private Integer id;
+    @NotBlank
     private String title;
     private Timestamp createdOn;
     private Timestamp lastUpdated;
