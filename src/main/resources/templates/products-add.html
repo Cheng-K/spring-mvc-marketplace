@@ -7,6 +7,7 @@
 >
   <head>
     <title>Add Product</title>
+    <link rel="stylesheet" th:href="@{/styles/products-add.css}" />
   </head>
   <body>
     <main layout:fragment="content">
@@ -19,40 +20,13 @@
           th:object="${newProduct}"
         >
           <div class="mb-3">
-            <label for="title" class="form-label">Product Title</label>
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Enter product title"
-              th:field="*{title}"
-            />
-          </div>
-          <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea
-              class="form-control"
-              th:field="*{description}"
-              rows="3"
-            ></textarea>
-          </div>
-          <div class="mb-3">
-            <label for="price" class="form-label">Price</label>
-            <input
-              type="number"
-              class="form-control"
-              th:field="*{price}"
-              min="0.00"
-              step="0.10"
-            />
-          </div>
-          <div class="mb-3">
-            <label for="image" class="form-label d-block">Product Image</label>
+            <label for="image" class="form-label d-block">Product Image*</label>
             <img
               id="previewImage"
               src=""
               th:src="*{image}"
               alt="No image selected"
-              class="mb-3"
+              class="mb-3 product-preview-img"
             />
             <input
               type="file"
@@ -60,17 +34,69 @@
               th:field="*{imageFile}"
               placeholder="Upload image"
               accept="image/*"
+              th:errorclass="is-invalid"
             />
+            <p
+              th:if="${#fields.hasErrors('imageFile')}"
+              th:errors="*{imageFile}"
+              class="invalid-feedback"
+            ></p>
           </div>
           <div class="mb-3">
-            <p class="mb-1">Condition</p>
+            <label for="title" class="form-label">Product Title*</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter product title"
+              th:field="*{title}"
+              th:errorclass="is-invalid"
+            />
+            <p
+              th:if="${#fields.hasErrors('title')}"
+              th:errors="*{title}"
+              class="invalid-feedback"
+            ></p>
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Description*</label>
+            <textarea
+              class="form-control"
+              th:field="*{description}"
+              rows="3"
+              th:errorclass="is-invalid"
+            ></textarea>
+            <p
+              th:if="${#fields.hasErrors('description')}"
+              th:errors="*{description}"
+              class="invalid-feedback"
+            ></p>
+          </div>
+          <div class="mb-3">
+            <label for="price" class="form-label">Price*</label>
+            <input
+              type="number"
+              class="form-control"
+              th:field="*{price}"
+              min="0.00"
+              max="9999.99"
+              step="0.10"
+              th:errorclass="is-invalid"
+            />
+            <p
+              th:if="${#fields.hasErrors('price')}"
+              th:errors="*{price}"
+              class="invalid-feedback"
+            ></p>
+          </div>
+          <div class="mb-3">
+            <p class="mb-1">Condition*</p>
             <div class="form-check form-check-inline">
               <input
                 class="form-check-input"
                 type="radio"
                 th:field="*{condition}"
                 th:value="USED"
-                checked
+                th:errorclass="is-invalid"
               />
               <label class="form-check-label" th:for="${#ids.prev('condition')}"
                 >Used</label
@@ -82,18 +108,25 @@
                 type="radio"
                 th:field="*{condition}"
                 th:value="LIKE_NEW"
+                th:errorclass="is-invalid"
               />
               <label class="form-check-label" th:for="${#ids.prev('condition')}"
                 >Like new</label
               >
+              <p
+                th:if="${#fields.hasErrors('condition')}"
+                th:errors="*{condition}"
+                class="invalid-feedback"
+              ></p>
             </div>
           </div>
           <div class="mb-3">
-            <p class="mb-1">Category</p>
+            <p class="mb-1">Category*</p>
             <select
               class="form-select"
               aria-label="Default select example"
               th:field="*{category}"
+              th:errorclass="is-invalid"
             >
               <option
                 th:each="category : ${availableCategories}"
@@ -101,9 +134,14 @@
                 th:text="${category.title}"
               ></option>
             </select>
+            <p
+              th:if="${#fields.hasErrors('category')}"
+              th:errors="*{category}"
+              class="invalid-feedback"
+            ></p>
           </div>
-
           <button type="submit" class="btn btn-primary">Add Product</button>
+          <a class="btn btn-danger" th:href="@{/products}">Discard</a>
         </form>
       </div>
     </main>
