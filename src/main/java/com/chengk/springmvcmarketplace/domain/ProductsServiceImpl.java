@@ -3,6 +3,7 @@ package com.chengk.springmvcmarketplace.domain;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -49,6 +50,14 @@ public class ProductsServiceImpl implements ProductsService {
         }
         productDto.setImage(fileName);
         productRepository.save(productDtoConverter.convertToEntity(productDto));
+    }
+
+    @Override
+    public ProductDto getProductById(Integer productId) {
+        Optional<Products> foundProduct = productRepository.findById(productId);
+        if (foundProduct.isEmpty())
+            return null;
+        return productDtoConverter.convertToDto(foundProduct.get());
     }
 
 }
