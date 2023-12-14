@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:th="http://www.thymeleaf.org"
+  layout:decorate="~{master-layout.html}"
+>
+  <head>
+    <title>Product Detail</title>
+    <link rel="stylesheet" th:href="@{/styles/products-add.css}" />
+  </head>
+  <body>
+    <main layout:fragment="content">
+      <body>
+        <div class="container mt-5" th:object="${product}">
+          <div class="row">
+            <div class="col-md-6 pe-5">
+              <img th:src=@{/img/{imageFile}(imageFile=*{image})}
+              class="img-fluid" alt="Product Image" />
+            </div>
+            <div class="col-md-6">
+              <h2 class="my-3" th:text="*{title}">Product Title</h2>
+              <h3 class="my-3" th:text="|$*{price}|">$ Product Price</h3>
+              <h5>Description</h5>
+              <p th:text="*{description}" class="fs-5">Product Description</p>
+              <h5>Category</h5>
+              <p class="text-muted fs-5" th:text="*{category.title}">
+                Category
+              </p>
+              <h5>Condition</h5>
+              <p class="text-muted fs-5" th:text="*{condition}">Condition</p>
+              <h5>Listed On</h5>
+              <p class="text-muted fs-5" th:text="*{listedOn}">
+                Uploaded on: Date and Time
+              </p>
+              <h4 class="my-3">Seller Information</h4>
+              <p>Seller Name</p>
+              <p>Contact: Seller Contact</p>
+            </div>
+          </div>
+        </div>
+      </body>
+    </main>
+  </body>
+</html>
