@@ -1,10 +1,10 @@
 package com.chengk.springmvcmarketplace.model.dto;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.chengk.springmvcmarketplace.domain.custom_validators.ValidImageFile;
 import com.chengk.springmvcmarketplace.model.value_objects.Condition;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,19 +31,19 @@ public class ProductDto {
     @NotNull
     @Valid
     private CategoryDto category;
-    private Timestamp listedOn;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime listedOn;
     @NotNull(message = "Product's condition must be specified")
     private Condition condition;
     private String image;
     @JsonIgnore
-    @ValidImageFile(message = "Product's image must be uploaded")
     private MultipartFile imageFile;
 
     public ProductDto() {
     }
 
     public ProductDto(Integer id, String title, Double price, String description, CategoryDto category,
-            Timestamp listedOn,
+            LocalDateTime listedOn,
             Condition condition, String image) {
         this.id = id;
         this.title = title;
@@ -87,11 +87,11 @@ public class ProductDto {
         this.category = category;
     }
 
-    public Timestamp getListedOn() {
+    public LocalDateTime getListedOn() {
         return listedOn;
     }
 
-    public void setListedOn(Timestamp listedOn) {
+    public void setListedOn(LocalDateTime listedOn) {
         this.listedOn = listedOn;
     }
 

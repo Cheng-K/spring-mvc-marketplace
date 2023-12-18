@@ -1,6 +1,6 @@
 package com.chengk.springmvcmarketplace.model.entity;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
@@ -15,11 +15,13 @@ public class Products {
     private Double price;
     private String description;
     private Integer categoryId;
-    private Timestamp listedOn;
+    private LocalDateTime listedOn;
     private Condition condition;
     private String image;
+    private Integer sellerId = 1;
 
-    public Products(Integer id, String title, Double price, String description, Integer categoryId, Timestamp listedOn,
+    public Products(Integer id, String title, Double price, String description, Integer categoryId,
+            LocalDateTime listedOn,
             Condition condition, String image) {
         this.id = id;
         this.title = title;
@@ -63,11 +65,11 @@ public class Products {
         this.categoryId = categoryId;
     }
 
-    public Timestamp getListedOn() {
+    public LocalDateTime getListedOn() {
         return listedOn;
     }
 
-    public void setListedOn(Timestamp listedOn) {
+    public void setListedOn(LocalDateTime listedOn) {
         this.listedOn = listedOn;
     }
 
