@@ -28,15 +28,31 @@
                 Category
               </p>
               <h5>Condition</h5>
-              <p class="text-muted fs-5" th:text="*{condition}">Condition</p>
+              <p
+                class="text-muted fs-5"
+                th:text="${#strings.capitalize(product.condition)}"
+              >
+                Condition
+              </p>
               <h5>Listed On</h5>
-              <p class="text-muted fs-5" th:text="*{listedOn}">
+              <p
+                class="text-muted fs-5"
+                th:text="${#dates.format(product.listedOn, 'dd/MMM/yyyy HH:mm')}"
+              >
                 Uploaded on: Date and Time
               </p>
               <h4 class="my-3">Seller Information</h4>
               <p>Seller Name</p>
               <p>Contact: Seller Contact</p>
             </div>
+          </div>
+          <div class="row">
+            <form
+              th:action="@{/products/{id}(id = ${product.id})}"
+              th:method="delete"
+            >
+              <button class="btn btn-danger">Delete</button>
+            </form>
           </div>
         </div>
       </body>
