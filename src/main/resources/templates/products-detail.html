@@ -37,7 +37,7 @@
               <h5>Listed On</h5>
               <p
                 class="text-muted fs-5"
-                th:text="${#dates.format(product.listedOn, 'dd/MMM/yyyy HH:mm')}"
+                th:text="${#temporals.format(product.listedOn, 'yyyy-MM-dd HH:mm:ss')}"
               >
                 Uploaded on: Date and Time
               </p>
@@ -47,12 +47,21 @@
             </div>
           </div>
           <div class="row">
-            <form
-              th:action="@{/products/{id}(id = ${product.id})}"
-              th:method="delete"
-            >
-              <button class="btn btn-danger">Delete</button>
-            </form>
+            <div class="col">
+              <a
+                th:href="@{/products/{id}/edit(id = ${product.id})}"
+                class="btn btn-secondary"
+                >Edit product</a
+              >
+            </div>
+            <div class="col">
+              <form
+                th:action="@{/products/{id}(id = ${product.id})}"
+                th:method="delete"
+              >
+                <button class="btn btn-danger">Delete</button>
+              </form>
+            </div>
           </div>
         </div>
       </body>

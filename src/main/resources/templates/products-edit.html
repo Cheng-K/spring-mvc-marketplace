@@ -6,28 +6,23 @@
   layout:decorate="~{master-layout.html}"
 >
   <head>
-    <title>Add Product</title>
+    <title>Edit Product</title>
     <link rel="stylesheet" th:href="@{/styles/products-add.css}" />
   </head>
   <body>
     <main layout:fragment="content">
       <div class="container mt-5">
-        <h1>Add New Product</h1>
+        <h1>Edit Product</h1>
         <form
-          method="post"
-          th:action="@{/products/add}"
+          th:method="put"
+          th:action="@{/products/{id}(id = ${product.id})}"
           enctype="multipart/form-data"
-          th:object="${newProduct}"
+          th:object="${product}"
         >
           <div class="mb-3">
             <label for="image" class="form-label d-block">Product Image*</label>
-            <img
-              id="previewImage"
-              src=""
-              th:src="@{/img/{imageFile}(imageFile=*{image})}"
-              alt="No image selected"
-              class="mb-3 product-preview-img"
-            />
+            <img th:src=@{/img/{imageFile}(imageFile=*{image})} alt="Product
+            Image" class="mb-3 product-preview-img" id="previewImage"/>
             <input
               type="file"
               class="form-control"
@@ -41,6 +36,12 @@
               th:errors="*{imageFile}"
               class="invalid-feedback"
             ></p>
+            <input
+              type="hidden"
+              class="form-control"
+              th:field="*{image}"
+              readonly
+            />
           </div>
           <div class="mb-3">
             <label for="title" class="form-label">Product Title*</label>
@@ -140,7 +141,16 @@
               class="invalid-feedback"
             ></p>
           </div>
-          <button type="submit" class="btn btn-primary">Add Product</button>
+          <div class="mb-3">
+            <label for="listedOn" class="form-label">Listed On</label>
+            <input
+              type="datetime-local"
+              class="form-control"
+              th:field="*{listedOn}"
+              readonly
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">Save</button>
           <a class="btn btn-danger" th:href="@{/products}">Discard</a>
         </form>
       </div>
