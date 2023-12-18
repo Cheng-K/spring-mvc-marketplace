@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -38,18 +37,15 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Override
     public void addNewProduct(ProductDto productDto) {
-        String originalFileName = productDto.getImageFile().getOriginalFilename();
-        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-        String fileName = UUID.randomUUID().toString() + fileExtension;
         try {
-            storageService.saveFile(productDto.getImageFile().getBytes(),
-                    fileName, "./src/main/resources/static/img");
+            String fileName = saveImageFile(productDto);
+            productDto.setImage(fileName);
+            productRepository.save(productDtoConverter.convertToEntity(productDto));
         } catch (IOException e) {
             System.err.println("Cannot read the bytes of multipart file");
             e.printStackTrace();
+            return;
         }
-        productDto.setImage(fileName);
-        productRepository.save(productDtoConverter.convertToEntity(productDto));
     }
 
     @Override
@@ -58,6 +54,51 @@ public class ProductsServiceImpl implements ProductsService {
         if (foundProduct.isEmpty())
             return null;
         return productDtoConverter.convertToDto(foundProduct.get());
+    }
+
+    @Override
+    public void editProduct(ProductDto productDto) {
+        if (productDto.getImageFile() != null && !productDto.getImageFile().isEmpty()) {
+            try {
+                storageService.deleteFile("./src/main/resources/static/img/" + productDto.getImage());
+                String fileName = saveImageFile(productDto);
+                productDto.setImage(fileName);
+            } catch (IOException e) {
+                System.err.println("Cannot read the bytes of multipart file");
+                e.printStackTrace();
+                return;
+            } catch (Exception e) {
+                System.err.println("Cannot delete file");
+                e.printStackTrace();
+                return;
+            }
+        }
+        productRepository.save(productDtoConverter.convertToEntity(productDto));
+    }
+
+    private String saveImageFile(ProductDto productDto) throws IOException {
+        String fileName = storageService.replaceFileNameWithUUID(productDto.getImageFile().getOriginalFilename());
+        storageService.saveFile(productDto.getImageFile().getBytes(),
+                fileName, "./src/main/resources/static/img");
+        return fileName;
+    }
+
+    @Override
+    public void removeProduct(Integer productId) {
+        Products product = productRepository.findById(productId).get();
+        if (product == null)
+            return;
+        try {
+            storageService.deleteFile("./src/main/resources/static/img/" + product.getImage());
+        } catch (IOException e) {
+            System.err.println("Cannot read the bytes of multipart file");
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Cannot delete file");
+            e.printStackTrace();
+        } finally {
+            productRepository.deleteById(productId);
+        }
     }
 
 }

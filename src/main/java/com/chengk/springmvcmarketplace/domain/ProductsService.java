@@ -5,9 +5,14 @@ import java.util.List;
 import com.chengk.springmvcmarketplace.model.dto.ProductDto;
 
 public interface ProductsService {
-    public List<ProductDto> getAllProducts();
+    List<ProductDto> getAllProducts();
 
-    public void addNewProduct(ProductDto productDto);
+    void addNewProduct(ProductDto productDto);
 
-    public ProductDto getProductById(Integer productId);
+    ProductDto getProductById(Integer productId);
+
+    void editProduct(ProductDto productDto);
+
+    void removeProduct(Integer productId);
+
 }
