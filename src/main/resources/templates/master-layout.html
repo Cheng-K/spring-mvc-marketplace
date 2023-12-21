@@ -65,10 +65,16 @@
                 <a class="nav-link disabled" aria-disabled="true">Disabled</a>
               </li>
             </ul>
-            <form class="d-flex" role="search">
+            <form
+              class="d-flex"
+              role="search"
+              th:action="@{/products/search}"
+              th:method="get"
+            >
               <input
                 class="form-control me-2"
                 type="search"
+                name="query"
                 placeholder="Search"
                 aria-label="Search"
               />
