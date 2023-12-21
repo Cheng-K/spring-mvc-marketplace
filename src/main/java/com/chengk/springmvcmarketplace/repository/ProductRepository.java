@@ -11,4 +11,6 @@ import com.chengk.springmvcmarketplace.model.entity.Products;
 public interface ProductRepository extends CrudRepository<Products, Integer> {
 
     List<Products> findByTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(String title, String description);
+
+    List<Products> findByCategoryId(Integer categoryId);
 }

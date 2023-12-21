@@ -1,13 +1,11 @@
 package com.chengk.springmvcmarketplace.controller;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.chengk.springmvcmarketplace.domain.CategoryService;
 import com.chengk.springmvcmarketplace.domain.ProductsService;
@@ -23,7 +22,6 @@ import com.chengk.springmvcmarketplace.model.dto.ProductDto;
 import com.chengk.springmvcmarketplace.model.value_objects.Condition;
 
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/products")
@@ -40,6 +38,8 @@ public class ProductsController {
     @GetMapping
     public String getAllProducts(Model model) {
         List<ProductDto> products = productsService.getAllProducts();
+        List<CategoryDto> categories = categoryService.getAllCategories();
+        model.addAttribute("availableCategories", categories);
         model.addAttribute("products", products);
         return "products-list";
     }
@@ -111,7 +111,17 @@ public class ProductsController {
 
     @GetMapping("/search")
     public String searchProducts(@RequestParam("query") String query, Model model) {
+        List<CategoryDto> categories = categoryService.getAllCategories();
+        model.addAttribute("availableCategories", categories);
         model.addAttribute("products", productsService.getProductsByQuery(query));
+        return "products-list";
+    }
+
+    @GetMapping("/categories/{categoryId}")
+    public String getProductsByCategory(@PathVariable("categoryId") Integer categoryId, Model model) {
+        List<CategoryDto> categories = categoryService.getAllCategories();
+        model.addAttribute("availableCategories", categories);
+        model.addAttribute("products", productsService.getProductsByCategoryId(categoryId));
         return "products-list";
     }
 

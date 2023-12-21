@@ -112,4 +112,14 @@ public class ProductsServiceImpl implements ProductsService {
         return result;
     }
 
+    @Override
+    public List<ProductDto> getProductsByCategoryId(Integer categoryId) {
+        List<Products> found = productRepository.findByCategoryId(categoryId);
+        List<ProductDto> result = new ArrayList<>();
+        for (var product : found) {
+            result.add(productDtoConverter.convertToDto(product));
+        }
+        return result;
+    }
+
 }
