@@ -23,6 +23,7 @@ import com.chengk.springmvcmarketplace.model.dto.ProductDto;
 import com.chengk.springmvcmarketplace.model.value_objects.Condition;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/products")
@@ -106,6 +107,12 @@ public class ProductsController {
         productDto.setId(productId);
         productsService.editProduct(productDto);
         return String.format("redirect:/products/%d", productId);
+    }
+
+    @GetMapping("/search")
+    public String searchProducts(@RequestParam("query") String query, Model model) {
+        model.addAttribute("products", productsService.getProductsByQuery(query));
+        return "products-list";
     }
 
 }

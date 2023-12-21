@@ -101,4 +101,15 @@ public class ProductsServiceImpl implements ProductsService {
         }
     }
 
+    @Override
+    public List<ProductDto> getProductsByQuery(String query) {
+        List<Products> found = productRepository.findByTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(query,
+                query);
+        List<ProductDto> result = new ArrayList<>();
+        for (var product : found) {
+            result.add(productDtoConverter.convertToDto(product));
+        }
+        return result;
+    }
+
 }

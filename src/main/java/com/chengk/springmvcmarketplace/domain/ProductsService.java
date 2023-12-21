@@ -15,4 +15,6 @@ public interface ProductsService {
 
     void removeProduct(Integer productId);
 
+    List<ProductDto> getProductsByQuery(String query);
+
 }
