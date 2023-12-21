@@ -1,19 +1,22 @@
 package com.chengk.springmvcmarketplace.model.entity;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Table("Categories")
 public class Categories {
     @Id
     private Integer id;
     private String title;
-    private Timestamp createdOn;
-    private Timestamp lastUpdated;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdOn;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime lastUpdated;
 
-    public Categories(Integer id, String title, Timestamp createdOn, Timestamp lastUpdated) {
+    public Categories(Integer id, String title, LocalDateTime createdOn, LocalDateTime lastUpdated) {
         this.id = id;
         this.title = title;
         this.createdOn = createdOn;
@@ -36,19 +39,19 @@ public class Categories {
         this.title = title;
     }
 
-    public Timestamp getCreatedOn() {
+    public LocalDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(Timestamp createdOn) {
+    public void setCreatedOn(LocalDateTime createdOn) {
         this.createdOn = createdOn;
     }
 
-    public Timestamp getLastUpdated() {
+    public LocalDateTime getLastUpdated() {
         return lastUpdated;
     }
 
-    public void setLastUpdated(Timestamp lastUpdated) {
+    public void setLastUpdated(LocalDateTime lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 

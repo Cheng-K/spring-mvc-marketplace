@@ -1,6 +1,6 @@
 package com.chengk.springmvcmarketplace.model.dto;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,10 +11,10 @@ public class CategoryDto {
     private Integer id;
     @NotBlank
     private String title;
-    private Timestamp createdOn;
-    private Timestamp lastUpdated;
+    private LocalDateTime createdOn;
+    private LocalDateTime lastUpdated;
 
-    public CategoryDto(Integer id, String title, Timestamp createdOn, Timestamp lastUpdated) {
+    public CategoryDto(Integer id, String title, LocalDateTime createdOn, LocalDateTime lastUpdated) {
         this.id = id;
         this.title = title;
         this.createdOn = createdOn;
@@ -40,19 +40,19 @@ public class CategoryDto {
         this.title = title;
     }
 
-    public Timestamp getCreatedOn() {
+    public LocalDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(Timestamp createdOn) {
+    public void setCreatedOn(LocalDateTime createdOn) {
         this.createdOn = createdOn;
     }
 
-    public Timestamp getLastUpdated() {
+    public LocalDateTime getLastUpdated() {
         return lastUpdated;
     }
 
-    public void setLastUpdated(Timestamp lastUpdated) {
+    public void setLastUpdated(LocalDateTime lastUpdated) {
         this.lastUpdated = lastUpdated;
     }
 

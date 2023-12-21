@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:th="http://www.thymeleaf.org"
+  layout:decorate="~{master-layout.html}"
+>
+  <head>
+    <title>Categories</title>
+  </head>
+  <body>
+    <main layout:fragment="content">
+      <div class="container">
+        <div class="d-flex mb-3">
+          <h2>Categories</h2>
+          <button class="btn btn-primary ms-auto">Add new category</button>
+        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Title</th>
+              <th>Created On</th>
+              <th>Last Updated</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="category : ${categories}">
+              <td th:text="${category.id}"></td>
+              <td th:text="${category.title}"></td>
+              <td
+                th:text="${#temporals.format(category.createdOn, 'yyyy-MM-dd HH:mm:ss')}"
+              ></td>
+              <td
+                th:text="${#temporals.format(category.lastUpdated, 'yyyy-MM-dd HH:mm:ss')}"
+              ></td>
+              <td>
+                <a href="#" class="btn btn-primary btn-sm">Edit</a>
+                <a href="#" class="btn btn-danger btn-sm">Delete</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </body>
+</html>
