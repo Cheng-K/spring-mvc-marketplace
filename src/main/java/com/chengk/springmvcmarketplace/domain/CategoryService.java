@@ -10,4 +10,6 @@ public interface CategoryService {
     void addNewCategory(CategoryDto categoryDto);
 
     boolean doesCategoryExists(String categoryName);
+
+    void removeCategory(Integer categoryId);
 }
