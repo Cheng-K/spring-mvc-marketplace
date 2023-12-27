@@ -31,4 +31,14 @@ public class CategoryServiceImpl implements CategoryService {
         return result;
     }
 
+    @Override
+    public void addNewCategory(CategoryDto categoryDto) {
+        categoryRepository.save(categoryDtoConverter.convertToEntity(categoryDto));
+    }
+
+    @Override
+    public boolean doesCategoryExists(String categoryName) {
+        return categoryRepository.existsByTitle(categoryName);
+    }
+
 }

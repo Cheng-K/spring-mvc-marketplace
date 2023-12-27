@@ -5,5 +5,9 @@ import java.util.List;
 import com.chengk.springmvcmarketplace.model.dto.CategoryDto;
 
 public interface CategoryService {
-    public List<CategoryDto> getAllCategories();
+    List<CategoryDto> getAllCategories();
+
+    void addNewCategory(CategoryDto categoryDto);
+
+    boolean doesCategoryExists(String categoryName);
 }
