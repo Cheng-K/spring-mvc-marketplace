@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public class CategoryDto {
     private Integer id;
-    @NotBlank
+    @NotBlank(message = "Category title must not be blank")
     private String title;
     private LocalDateTime createdOn;
     private LocalDateTime lastUpdated;
