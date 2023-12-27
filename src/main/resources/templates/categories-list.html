@@ -10,10 +10,116 @@
   </head>
   <body>
     <main layout:fragment="content">
+      <div
+        class="modal fade"
+        id="inputModal"
+        tabindex="-1"
+        aria-labelledby="inputModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="inputModalLabel">Add new category</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form
+                th:action="@{/categories}"
+                th:method="post"
+                th:object="${newCategory}"
+              >
+                <div class="mb-3">
+                  <label for="title" class="form-label">Category Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    th:field="*{title}"
+                    placeholder="Enter category name"
+                  />
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="modal fade"
+        id="errorModal"
+        tabindex="-1"
+        aria-labelledby="errorModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="errorModalLabel">Add new category</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form
+                th:action="@{/categories}"
+                th:method="post"
+                th:object="${submittedCategory}"
+              >
+                <div class="mb-3">
+                  <label for="title" class="form-label">Category Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    th:field="*{title}"
+                    placeholder="Enter category name"
+                    th:errorclass="is-invalid"
+                  />
+                  <p
+                    th:if="${#fields.hasErrors('title')}"
+                    th:errors="*{title}"
+                    class="invalid-feedback"
+                  >
+                    Error!
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="container">
         <div class="d-flex mb-3">
           <h2>Categories</h2>
-          <button class="btn btn-primary ms-auto">Add new category</button>
+          <button
+            class="btn btn-primary ms-auto"
+            data-bs-toggle="modal"
+            data-bs-target="#inputModal"
+          >
+            Add new category
+          </button>
         </div>
         <table class="table table-bordered">
           <thead>
@@ -45,4 +151,13 @@
       </div>
     </main>
   </body>
+  <div layout:fragment="scripts">
+    <script type="text/javascript" th:inline="javascript">
+      let attribute = [[${hasErrors}]];
+      let formModal = new bootstrap.Modal('#errorModal');
+      if (attribute) {
+        formModal.show();
+      }
+    </script>
+  </div>
 </html>
