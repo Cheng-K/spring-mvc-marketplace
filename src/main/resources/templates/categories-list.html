@@ -58,7 +58,7 @@
       </div>
       <div
         class="modal fade"
-        id="errorModal"
+        id="errorModal-new"
         tabindex="-1"
         aria-labelledby="errorModalLabel"
         aria-hidden="true"
@@ -142,7 +142,13 @@
                 th:text="${#temporals.format(category.lastUpdated, 'yyyy-MM-dd HH:mm:ss')}"
               ></td>
               <td>
-                <a href="#" class="btn btn-primary btn-sm">Edit</a>
+                <button
+                  data-bs-toggle="modal"
+                  th:data-bs-target="|#editModal-${category.id}|"
+                  class="btn btn-primary btn-sm"
+                >
+                  Edit
+                </button>
                 <form
                   th:action="@{/categories/{id}(id = ${category.id})}"
                   th:method="delete"
@@ -155,14 +161,142 @@
           </tbody>
         </table>
       </div>
+      <div
+        th:each="category : ${categories}"
+        class="modal fade"
+        th:id="|editModal-${category.id}|"
+        tabindex="-1"
+        aria-labelledby="editModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="inputModalLabel">Edit category</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form
+                th:action="@{/categories/{id}(id = ${category.id})}"
+                th:method="put"
+              >
+                <div class="mb-3">
+                  <label th:for="|editTitle-${category.id}|" class="form-label"
+                    >Category Name</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    th:id="|editTitle-${category.id}|"
+                    th:name="title"
+                    th:value="${category.title}"
+                    placeholder="Enter category name"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label th:for="|createdOn-${category.id}|" class="form-label"
+                    >Created On</label
+                  >
+                  <input
+                    type="datetime-local"
+                    class="form-control"
+                    th:name="createdOn"
+                    th:value="${#temporals.format(category.createdOn, 'yyyy-MM-dd HH:mm:ss')}"
+                    readonly
+                  />
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        th:each="category : ${categories}"
+        class="modal fade"
+        th:id="|errorModal-${category.id}|"
+        tabindex="-1"
+        aria-labelledby="errorModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="errorModalLabel">Edit category</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form
+                th:action="@{/categories/{id}(id = ${category.id})}"
+                th:method="put"
+                th:object="${submittedCategory}"
+              >
+                <div class="mb-3">
+                  <label for="title" class="form-label">Category Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    th:field="*{title}"
+                    placeholder="Enter category name"
+                    th:errorclass="is-invalid"
+                  />
+                  <p
+                    th:if="${#fields.hasErrors('title')}"
+                    th:errors="*{title}"
+                    class="invalid-feedback"
+                  >
+                    Error!
+                  </p>
+                </div>
+                <div class="mb-3">
+                  <label th:for="|createdOn-${category.id}|" class="form-label"
+                    >Created On</label
+                  >
+                  <input
+                    type="datetime-local"
+                    class="form-control"
+                    th:value="${#temporals.format(category.createdOn, 'yyyy-MM-dd HH:mm:ss')}"
+                    readonly
+                  />
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   </body>
   <div layout:fragment="scripts">
     <script type="text/javascript" th:inline="javascript">
-      let attribute = [[${hasErrors}]];
-      let formModal = new bootstrap.Modal('#errorModal');
-      if (attribute) {
-        formModal.show();
+      let addErrorPresent = [[${hasErrors}]];
+      if (addErrorPresent) {
+        let addErrorModal = new bootstrap.Modal(`#errorModal-${addErrorPresent}`);
+        addErrorModal.show();
       }
     </script>
   </div>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import com.chengk.springmvcmarketplace.model.dto.CategoryDto;
@@ -44,6 +45,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void removeCategory(Integer categoryId) {
         categoryRepository.deleteById(categoryId);
+    }
+
+    @Override
+    public void editCategory(CategoryDto categoryDto) {
+        categoryDto.setLastUpdated(LocalDateTime.now());
+        categoryRepository.save(categoryDtoConverter.convertToEntity(categoryDto));
     }
 
 }

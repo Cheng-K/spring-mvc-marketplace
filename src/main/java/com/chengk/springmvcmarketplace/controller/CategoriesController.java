@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.chengk.springmvcmarketplace.domain.CategoryService;
@@ -46,7 +47,7 @@ public class CategoriesController {
         if (result.hasErrors()) {
             model.addAttribute("categories", categoryService.getAllCategories());
             model.addAttribute("newCategory", new CategoryDto());
-            model.addAttribute("hasErrors", true);
+            model.addAttribute("hasErrors", "new");
             return "categories-list";
         }
         categoryDto.setCreatedOn(LocalDateTime.now());
@@ -58,6 +59,24 @@ public class CategoriesController {
     @DeleteMapping("/{categoryId}")
     public String deleteCategory(@PathVariable("categoryId") Integer categoryId) {
         categoryService.removeCategory(categoryId);
+        return "redirect:/categories";
+    }
+
+    @PutMapping("/{categoryId}")
+    public String updateCategory(@PathVariable("categoryId") Integer categoryId,
+            @Valid @ModelAttribute("submittedCategory") CategoryDto categoryDto, BindingResult result, Model model) {
+
+        if (!categoryDto.getTitle().isEmpty() && categoryService.doesCategoryExists(categoryDto.getTitle())) {
+            result.rejectValue("title", "duplicate.category", "Category already exist.");
+        }
+        if (result.hasErrors()) {
+            model.addAttribute("categories", categoryService.getAllCategories());
+            model.addAttribute("newCategory", new CategoryDto());
+            model.addAttribute("hasErrors", categoryId);
+            return "categories-list";
+        }
+        categoryDto.setId(categoryId);
+        categoryService.editCategory(categoryDto);
         return "redirect:/categories";
     }
 

@@ -2,6 +2,8 @@ package com.chengk.springmvcmarketplace.model.dto;
 
 import java.time.LocalDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -11,7 +13,9 @@ public class CategoryDto {
     private Integer id;
     @NotBlank(message = "Category title must not be blank")
     private String title;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdOn;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastUpdated;
 
     public CategoryDto(Integer id, String title, LocalDateTime createdOn, LocalDateTime lastUpdated) {
