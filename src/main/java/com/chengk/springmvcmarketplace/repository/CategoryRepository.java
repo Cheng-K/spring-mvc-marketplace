@@ -7,4 +7,6 @@ import com.chengk.springmvcmarketplace.model.entity.Categories;
 
 @Repository
 public interface CategoryRepository extends CrudRepository<Categories, Integer> {
+
+    boolean existsByTitle(String title);
 }
