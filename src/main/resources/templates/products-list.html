@@ -7,46 +7,56 @@
 >
   <head>
     <title>Products</title>
+    <link rel="stylesheet" th:href="@{/styles/products-list.css}" />
   </head>
   <body>
     <main layout:fragment="content">
       <div class="container-fluid d-flex">
         <div class="w-25">
-          <h4>Categories</h4>
+          <div class="d-flex mb-2 justify-content-between">
+            <h4>Categories</h4>
+            <a
+              class="btn btn-secondary"
+              href="/products"
+              th:if="${selectedCategory != null}"
+              >Clear selection</a
+            >
+          </div>
           <ul class="list-group">
             <li
-              class="list-group-item list-group-item-action"
+              class="list-group-item list-group-item-action category-list-item"
               th:each="category : ${availableCategories}"
-            >
-              <a
-                th:href="@{/products/categories/{id}(id=${category.id})}"
-                th:text="${category.title}"
-              ></a>
-            </li>
+              th:text="${category.title}"
+              th:data-category-id="${category.id}"
+              th:classappend="${category.id == selectedCategory} ? 'active' : '' "
+            ></li>
           </ul>
         </div>
         <div class="container-fluid px-5">
           <div class="row">
             <div class="col-md-4 mb-4" th:each="product : ${products}">
-              <div class="card">
+              <div class="card product-card" th:data-product-id="${product.id}">
                 <img
                   th:src="@{/img/{imageFile}(imageFile=${product.image})}"
-                  class="card-img-top"
-                  alt="Product 1"
+                  class="card-img-top product-img"
+                  th:alt="${product.title}"
                 />
                 <div class="card-body">
                   <h5 class="card-title" th:text="${product.title}">
                     Product 1
                   </h5>
-                  <p class="card-text" th:text="${product.description}">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Donec sed diam eu diam pretium bibendum.
-                  </p>
-                  <a
-                    th:href="@{/products/{id}(id = ${product.id})}"
-                    class="btn btn-primary"
-                    >View Details</a
-                  >
+                  <p
+                    class="card-text mb-2 fw-bold"
+                    th:text="|RM${product.price}|"
+                  ></p>
+                  <div th:switch="${product.condition.name()}">
+                    <p th:case="'LIKE_NEW'">Like new</p>
+                    <p th:case="'USED'">Used</p>
+                  </div>
+                  <p
+                    class="card-text product-card-description"
+                    th:text="${product.description}"
+                  ></p>
                 </div>
               </div>
             </div>
@@ -58,4 +68,7 @@
       </div>
     </main>
   </body>
+  <div layout:fragment="scripts">
+    <script type="text/javascript" th:src="@{/js/products-list.js}"></script>
+  </div>
 </html>

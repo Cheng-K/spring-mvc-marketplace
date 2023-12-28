@@ -7,7 +7,7 @@
 >
   <head>
     <title>Product Detail</title>
-    <link rel="stylesheet" th:href="@{/styles/products-add.css}" />
+    <link rel="stylesheet" th:href="@{/styles/products-detail.css}" />
   </head>
   <body>
     <main layout:fragment="content">
@@ -20,20 +20,20 @@
             </div>
             <div class="col-md-6">
               <h2 class="my-3" th:text="*{title}">Product Title</h2>
-              <h3 class="my-3" th:text="|$*{price}|">$ Product Price</h3>
+              <h3 class="my-3" th:text="|RM*{price}|">$ Product Price</h3>
               <h5>Description</h5>
-              <p th:text="*{description}" class="fs-5">Product Description</p>
+              <pre th:text="*{description}" class="fs-5">
+Product Description</pre
+              >
               <h5>Category</h5>
               <p class="text-muted fs-5" th:text="*{category.title}">
                 Category
               </p>
               <h5>Condition</h5>
-              <p
-                class="text-muted fs-5"
-                th:text="${#strings.capitalize(product.condition)}"
-              >
-                Condition
-              </p>
+              <div th:switch="*{condition.name()}">
+                <p th:case="'LIKE_NEW'">Like new</p>
+                <p th:case="'USED'">Used</p>
+              </div>
               <h5>Listed On</h5>
               <p
                 class="text-muted fs-5"

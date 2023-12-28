@@ -121,6 +121,7 @@ public class ProductsController {
     public String getProductsByCategory(@PathVariable("categoryId") Integer categoryId, Model model) {
         List<CategoryDto> categories = categoryService.getAllCategories();
         model.addAttribute("availableCategories", categories);
+        model.addAttribute("selectedCategory", categoryId);
         model.addAttribute("products", productsService.getProductsByCategoryId(categoryId));
         return "products-list";
     }

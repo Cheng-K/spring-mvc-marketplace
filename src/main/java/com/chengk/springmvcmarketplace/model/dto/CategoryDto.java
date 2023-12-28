@@ -63,6 +63,7 @@ public class CategoryDto {
     @Override
     public String toString() {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.findAndRegisterModules();
         try {
             return mapper.writeValueAsString(this);
         } catch (JsonProcessingException e) {

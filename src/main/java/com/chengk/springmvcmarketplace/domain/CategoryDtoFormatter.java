@@ -18,6 +18,7 @@ public class CategoryDtoFormatter implements Formatter<CategoryDto> {
     @Override
     public CategoryDto parse(String text, Locale locale) {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.findAndRegisterModules();
         CategoryDto parsed = null;
         try {
             parsed = mapper.readValue(text, CategoryDto.class);
