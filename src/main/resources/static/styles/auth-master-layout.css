@@ -1,0 +1,6 @@
+.vl {
+  width: 5px;
+  height: 55%;
+  margin-right: 10px;
+  background-color: var(--bs-gray-500);
+}

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:th="http://www.thymeleaf.org"
+  layout:decorate="~{master-layout.html}"
+>
+  <head>
+    <title layout:title-pattern="$CONTENT_TITLE"></title>
+    <link th:href="@{/styles/auth-master-layout.css}" rel="stylesheet" />
+  </head>
+  <body>
+    <main
+      layout:fragment="main"
+      class="container d-flex align-items-center vh-100"
+    >
+      <div class="container text-center">
+        <h1>Marketplace</h1>
+      </div>
+      <div class="vl"></div>
+      <div
+        layout:fragment="form-container"
+        class="d-flex justify-content-center"
+      ></div>
+    </main>
+  </body>
+</html>
