@@ -4,17 +4,17 @@ import org.springframework.data.relational.core.mapping.Table;
 
 @Table("User_Roles")
 public class RoleRef {
-    private int roleId;
+    private Integer roleId;
 
-    public RoleRef(int roleId) {
+    public RoleRef(Integer roleId) {
         this.roleId = roleId;
     }
 
-    public int getRoleId() {
+    public Integer getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(int roleId) {
+    public void setRoleId(Integer roleId) {
         this.roleId = roleId;
     }
 

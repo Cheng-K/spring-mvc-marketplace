@@ -10,13 +10,13 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table("Users")
 public class Users {
     @Id
-    private int id;
+    private Integer id;
     private String username;
     private String email;
     private String password;
     private Set<RoleRef> roles = new HashSet<>();
 
-    public Users(int id, String username, String email, String password, Set<RoleRef> roles) {
+    public Users(Integer id, String username, String email, String password, Set<RoleRef> roles) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -24,11 +24,11 @@ public class Users {
         this.roles = roles;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
