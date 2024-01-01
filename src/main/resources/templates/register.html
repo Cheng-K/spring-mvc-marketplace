@@ -14,40 +14,40 @@
       class="container-fluid d-flex justify-content-center"
       layout:fragment="form-container"
     >
-      <form class="form-container">
+      <form class="form-container" th:object="${newUser}" th:action="@{/register}" th:method="post">
         <h2 class="mb-3">Registration Form</h2>
         <div class="form-group mb-3">
           <label for="username">Username</label>
           <input
             type="text"
             class="form-control"
-            id="username"
-            name="username"
             placeholder="Enter username"
-            required
+            th:field="*{username}"
+            th:errorclass="is-invalid"
           />
+          <p th:errors="*{username}" th:if="${#fields.hasErrors('username')}" class="invalid-feedback"></p>
         </div>
         <div class="form-group mb-3">
           <label for="email">Email</label>
           <input
             type="email"
             class="form-control"
-            id="email"
-            name="email"
             placeholder="Enter email"
-            required
+            th:field="*{email}"
+            th:errorclass="is-invalid"
           />
+          <p th:errors="*{email}" th:if="${#fields.hasErrors('email')}" class="invalid-feedback"></p>
         </div>
         <div class="form-group mb-3">
           <label for="password">Password</label>
           <input
             type="password"
             class="form-control"
-            id="password"
-            name="password"
             placeholder="Enter password"
-            required
+            th:field="*{password}"
+            th:errorclass="is-invalid"
           />
+          <p th:errors="*{password}" th:if="${#fields.hasErrors('password')}" class="invalid-feedback"></p>
         </div>
         <button type="submit" class="btn btn-primary mb-3">Register</button>
         <div>

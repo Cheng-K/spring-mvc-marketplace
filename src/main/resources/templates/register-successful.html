@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:th="http://www.thymeleaf.org"
+  layout:decorate="~{auth-master-layout.html}"
+>
+  <head>
+    <title>Registration</title>
+    <link th:href="@{/styles/register.css}" rel="stylesheet" />
+  </head>
+  <body>
+    <main
+      class="container-fluid d-flex justify-content-center"
+      layout:fragment="form-container"
+    >
+      <div class="container-fluid d-flex flex-column align-items-center">
+        <svg
+          width="5em"
+          height="5em"
+          viewBox="0 0 16 16"
+          class="bi bi-check-circle-fill text-success mb-3"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zM6.5 11.5a.5.5 0 0 1-.707 0l-3-3a.5.5 0 0 1 .707-.707L6.5 10.293l4.5-4.5a.5.5 0 0 1 .707.707l-5 5z"
+          />
+        </svg>
+        <h2 class="mb-5">Account Registration Successful!</h2>
+        <a th:href="@{/login}" class="btn btn-primary">Go to Login Page</a>
+      </div>
+    </main>
+  </body>
+</html>
