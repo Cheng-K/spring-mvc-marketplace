@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("Users")
@@ -14,6 +15,7 @@ public class Users {
     private String username;
     private String email;
     private String password;
+    @MappedCollection(idColumn = "user_id")
     private Set<RoleRef> roles = new HashSet<>();
 
     public Users(Integer id, String username, String email, String password, Set<RoleRef> roles) {
