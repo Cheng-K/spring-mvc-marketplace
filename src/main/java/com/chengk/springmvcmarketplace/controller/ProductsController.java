@@ -111,6 +111,9 @@ public class ProductsController {
 
     @GetMapping("/search")
     public String searchProducts(@RequestParam("query") String query, Model model) {
+        if (query == null || query.isBlank()) {
+            return "redirect:/products";
+        }
         List<CategoryDto> categories = categoryService.getAllCategories();
         model.addAttribute("availableCategories", categories);
         model.addAttribute("products", productsService.getProductsByQuery(query));
