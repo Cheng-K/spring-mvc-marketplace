@@ -7,21 +7,25 @@
 >
   <head>
     <title>Login</title>
-    <link th:href="@{/styles/register.css}" rel="stylesheet" />
+    <link th:href="@{/styles/register.css}" rel="stylesheet" type="text/css"/>
   </head>
   <body>
     <main
       layout:fragment="form-container"
       class="d-flex justify-content-center container"
     >
-      <form class="form-container">
+      <form class="form-container" th:action="@{/login}" th:method="post">
         <h2 class="text-center">Login</h2>
+        <div th:if="${param.error}" class="bg-danger text-center text-light py-2 my-3 rounded fw-semibold">    
+          Invalid username and password. Please try again.
+        </div>
         <div class="form-group mb-3">
           <label for="username">Username</label>
           <input
             type="text"
             class="form-control"
             id="username"
+            name="username"
             placeholder="Enter username"
           />
         </div>
@@ -31,6 +35,7 @@
             type="password"
             class="form-control"
             id="password"
+            name="password"
             placeholder="Password"
           />
         </div>
