@@ -7,6 +7,8 @@ public interface UserService {
 
     UserDto getUserByUsername(String username);
 
+    UserDto getUserById(Integer id);
+
     boolean usernameExists(String username);
 
     boolean emailExists(String email);

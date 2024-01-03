@@ -20,7 +20,10 @@
               class="card shadow-sm p-3 mb-5 bg-white rounded"
               th:object="${user}"
             >
-              <div class="card-body text-center">
+              <div
+                class="card-body text-center"
+                th:if="${ validatedErrors == null && (param.edit == null || !#strings.equals(param.edit, 'true'))}"
+              >
                 <!-- Profile picture -->
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -41,7 +44,94 @@
                 <!-- Email -->
                 <p class="card-text" th:text="*{email}">john.doe@example.com</p>
                 <!-- Edit button -->
-                <a href="#" class="btn btn-primary">Edit profile</a>
+                <button
+                  onclick="redirectToEditProfileURL()"
+                  class="btn btn-primary"
+                >
+                  Edit profile
+                </button>
+              </div>
+              <div
+                class="card-body"
+                th:if="${ validatedErrors != null || #strings.equals(param.edit, 'true')}"
+              >
+                <form
+                  th:method="post"
+                  th:action="@{/profiles/{userId}/edit(userId = ${user.id})}"
+                  th:object="${editUser}"
+                >
+                  <!-- Profile picture -->
+                  <div class="mb-3 text-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="45"
+                      height="45"
+                      fill="currentColor"
+                      class="bi bi-person-circle mb-3"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                      <path
+                        fill-rule="evenodd"
+                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
+                      />
+                    </svg>
+                  </div>
+                  <!-- Username -->
+                  <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input
+                      type="text"
+                      th:field="*{username}"
+                      class="form-control"
+                      th:errorclass="is-invalid"
+                    />
+                    <p
+                      th:errors="*{username}"
+                      th:if="${#fields.hasErrors('username')}"
+                      class="invalid-feedback"
+                    ></p>
+                  </div>
+                  <!-- Email -->
+                  <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input
+                      type="email"
+                      th:field="*{email}"
+                      th:errorclass="is-invalid"
+                      class="form-control"
+                    />
+                    <p
+                      th:errors="*{email}"
+                      th:if="${#fields.hasErrors('email')}"
+                      class="invalid-feedback"
+                    ></p>
+                  </div>
+                  <!-- Password -->
+                  <div class="mb-3">
+                    <label for="password" class="form-label"
+                      >New Password</label
+                    >
+                    <input
+                      type="password"
+                      th:field="*{password}"
+                      th:errorclass="is-invalid"
+                      class="form-control"
+                    />
+                    <p
+                      th:errors="*{password}"
+                      th:if="${#fields.hasErrors('password')}"
+                      class="invalid-feedback"
+                    ></p>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Save</button>
+                  <a
+                    type="button"
+                    class="btn btn-danger"
+                    th:href="@{/profiles/{username}(username=${user.username})}"
+                    >Discard</a
+                  >
+                </form>
               </div>
             </div>
           </div>
@@ -49,4 +139,13 @@
       </div>
     </main>
   </body>
+  <div layout:fragment="scripts">
+    <script th:inline="javascript">
+      function redirectToEditProfileURL() {
+        let params = new URLSearchParams();
+        params.append("edit", "true");
+        location.href = `${location.pathname}?${params.toString()}`;
+      }
+    </script>
+  </div>
 </html>

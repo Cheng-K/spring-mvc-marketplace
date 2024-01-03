@@ -39,7 +39,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests((security) -> {
                     security.requestMatchers("/login", "/register", "/styles/**", "/js/**")
                             .permitAll()

@@ -42,4 +42,12 @@ public class UserServiceImpl implements UserService {
         return usersRepository.existsByUsername(username);
     }
 
+    @Override
+    public UserDto getUserById(Integer id) {
+        Optional<Users> user = usersRepository.findById(id);
+        if (user.isEmpty())
+            return null;
+        return userDtoConverter.convertToDto(user.get());
+    }
+
 }

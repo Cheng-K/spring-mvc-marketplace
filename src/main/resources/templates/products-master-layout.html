@@ -59,7 +59,10 @@
                 <a class="nav-link disabled" aria-disabled="true">Disabled</a>
               </li>
             </ul>
-            <div class="d-flex align-items-center">
+            <a
+              class="d-flex align-items-center text-decoration-none text-reset"
+              th:href="@{/profiles/{username}(username=${#authentication.name})}"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="28"
@@ -75,7 +78,7 @@
                 />
               </svg>
               <span class="fs-5" sec:authentication="name"></span>
-            </div>
+            </a>
           </div>
         </div>
       </nav>
