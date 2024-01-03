@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:th="http://www.thymeleaf.org"
+  layout:decorate="~{products-master-layout.html}"
+>
+  <head>
+    <title>Home</title>
+  </head>
+  <body>
+    <main
+      layout:fragment="main"
+      th:classappend="|d-flex justify-content-center align-items-center|"
+    >
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div
+              class="card shadow-sm p-3 mb-5 bg-white rounded"
+              th:object="${user}"
+            >
+              <div class="card-body text-center">
+                <!-- Profile picture -->
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="45"
+                  height="45"
+                  fill="currentColor"
+                  class="bi bi-person-circle mb-3"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                  <path
+                    fill-rule="evenodd"
+                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
+                  />
+                </svg>
+                <!-- Username -->
+                <h4 class="card-title" th:text="*{username}">John Doe</h4>
+                <!-- Email -->
+                <p class="card-text" th:text="*{email}">john.doe@example.com</p>
+                <!-- Edit button -->
+                <a href="#" class="btn btn-primary">Edit profile</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,5 +1,7 @@
 package com.chengk.springmvcmarketplace.domain;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.chengk.springmvcmarketplace.model.dto.UserDto;
@@ -20,6 +22,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addNewUser(UserDto userDto) {
         usersRepository.save(userDtoConverter.convertToEntity(userDto));
+    }
+
+    @Override
+    public UserDto getUserByUsername(String username) {
+        Optional<Users> user = usersRepository.findByUsername(username);
+        if (user.isEmpty())
+            return null;
+        return userDtoConverter.convertToDto(user.get());
     }
 
 }
