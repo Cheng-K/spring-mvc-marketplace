@@ -6,4 +6,8 @@ public interface UserService {
     void addNewUser(UserDto userDto);
 
     UserDto getUserByUsername(String username);
+
+    boolean usernameExists(String username);
+
+    boolean emailExists(String email);
 }

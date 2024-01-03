@@ -40,6 +40,14 @@ public class AuthenticationController {
     @PostMapping("/register")
     public String postNewUser(@Valid @ModelAttribute("newUser") UserDto userDto, BindingResult bindingResult,
             Model model) {
+        if (userDto.getEmail() != null && userService.emailExists(userDto.getEmail())) {
+            bindingResult.rejectValue("email", "email.exists",
+                    "Email entered has already been used by another account. Please provide another one.");
+        }
+        if (userDto.getUsername() != null && userService.usernameExists(userDto.getUsername())) {
+            bindingResult.rejectValue("username", "username.exists",
+                    "Username entered has already been used by another account. Please provide another one.");
+        }
         if (bindingResult.hasErrors()) {
             return "register";
         }

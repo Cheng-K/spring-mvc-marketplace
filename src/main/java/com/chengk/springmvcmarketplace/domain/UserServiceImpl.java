@@ -32,4 +32,14 @@ public class UserServiceImpl implements UserService {
         return userDtoConverter.convertToDto(user.get());
     }
 
+    @Override
+    public boolean emailExists(String email) {
+        return usersRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean usernameExists(String username) {
+        return usersRepository.existsByUsername(username);
+    }
+
 }
