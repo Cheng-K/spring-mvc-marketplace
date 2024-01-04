@@ -12,4 +12,6 @@ public interface UserService {
     boolean usernameExists(String username);
 
     boolean emailExists(String email);
+
+    void editUser(UserDto userDto);
 }

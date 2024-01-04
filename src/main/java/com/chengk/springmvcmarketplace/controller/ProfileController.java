@@ -2,6 +2,9 @@ package com.chengk.springmvcmarketplace.controller;
 
 import java.text.MessageFormat;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -42,13 +45,54 @@ public class ProfileController {
     @PostMapping("/{userId}/edit")
     public String editProfile(@PathVariable("userId") Integer userId,
             @Valid @ModelAttribute("editUser") UserDto newUser,
-            BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            model.addAttribute("user", userService.getUserById(userId));
+            BindingResult bindingResult, Model model) {
+        UserDto currentUser = userService.getUserById(userId);
+
+        // check username changes
+        if (!currentUser.getUsername().equals(newUser.getUsername())) {
+            if (userService.usernameExists(newUser.getUsername())) {
+                bindingResult.rejectValue("username", "username.exists",
+                        "Username entered has already been used by another account. Please provide another one");
+            } else {
+                currentUser.setUsername(newUser.getUsername());
+            }
+        }
+
+        // check email changes
+        if (!currentUser.getEmail().equals(newUser.getEmail())) {
+            if (userService.emailExists(newUser.getEmail())) {
+                bindingResult.rejectValue("email", "email.exists",
+                        "Email entered has already been used by another account. Please provide another one");
+            } else {
+                currentUser.setEmail(newUser.getEmail());
+            }
+        }
+
+        // password checking
+        if (!newUser.getPassword().isEmpty()) {
+            if (newUser.getPassword().length() < 6) {
+                bindingResult.rejectValue("password", "password.short", "Password must be at least 6 characters");
+            } else if (newUser.getPassword().length() > 14) {
+                bindingResult.rejectValue("password", "password.long", "Password must not exceed 14 characters");
+            } else {
+                currentUser.setPassword(newUser.getPassword());
+            }
+        }
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("user", currentUser);
             model.addAttribute("validatedErrors", true);
             return "profiles-detail";
         }
-        return MessageFormat.format("redirect:/profiles/{0}", newUser.getUsername());
+
+        userService.editUser(currentUser);
+
+        // dynamically update logged in user details
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(currentUser.getUsername(),
+                currentUser.getPassword(), currentUser.getGrantedAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+        return MessageFormat.format("redirect:/profiles/{0}", currentUser.getUsername());
     }
 
 }

@@ -50,4 +50,14 @@ public class UserServiceImpl implements UserService {
         return userDtoConverter.convertToDto(user.get());
     }
 
+    @Override
+    public void editUser(UserDto userDto) {
+        Optional<Users> user = usersRepository.findById(userDto.getId());
+        Users editedUser = userDtoConverter.convertToEntity(userDto);
+        if (editedUser.getPassword() == null) {
+            editedUser.setPassword(user.get().getPassword());
+        }
+        usersRepository.save(editedUser);
+    }
+
 }
