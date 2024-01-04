@@ -42,11 +42,18 @@ public class AuthenticationController {
             Model model) {
         if (userDto.getEmail() != null && userService.emailExists(userDto.getEmail())) {
             bindingResult.rejectValue("email", "email.exists",
-                    "Email entered has already been used by another account. Please provide another one.");
+                    "Email entered has already been used by another account. Please provide another one");
         }
         if (userDto.getUsername() != null && userService.usernameExists(userDto.getUsername())) {
             bindingResult.rejectValue("username", "username.exists",
-                    "Username entered has already been used by another account. Please provide another one.");
+                    "Username entered has already been used by another account. Please provide another one");
+        }
+        if (userDto.getPassword().isEmpty()) {
+            bindingResult.rejectValue("password", "password.empty", "Password cannot be blank");
+        } else if (userDto.getPassword().length() < 6) {
+            bindingResult.rejectValue("password", "password.short", "Password must be at least 6 characters");
+        } else if (userDto.getPassword().length() > 14) {
+            bindingResult.rejectValue("password", "password.long", "Password must not exceed 14 characters");
         }
         if (bindingResult.hasErrors()) {
             return "register";
