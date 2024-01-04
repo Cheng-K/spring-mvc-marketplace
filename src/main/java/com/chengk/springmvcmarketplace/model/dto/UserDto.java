@@ -2,25 +2,25 @@ package com.chengk.springmvcmarketplace.model.dto;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import org.hibernate.validator.constraints.Length;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class UserDto {
     private Integer id;
     @NotBlank(message = "Username cannot be blank")
-    @Length(min = 4, max = 50, message = "Username can only be within 4 to 50 characters")
+    @Size(min = 4, max = 50, message = "Username can only be within 4 to 50 characters")
     private String username;
     @NotBlank(message = "Email cannot be blank")
     @Email(message = "Please provide a valid email address")
     private String email;
-    @Length(min = 6, max = 12, message = "Password can only be within 6 to 12 characters")
-    @NotBlank(message = "Password cannot be blank")
     private String password;
     private Set<RoleDto> roles = new HashSet<>();
 
@@ -72,6 +72,11 @@ public class UserDto {
 
     public void setRoles(Set<RoleDto> roles) {
         this.roles = roles;
+    }
+
+    public Set<SimpleGrantedAuthority> getGrantedAuthorities() {
+        return roles.stream().map((roleDto) -> new SimpleGrantedAuthority(roleDto.getName()))
+                .collect(Collectors.toSet());
     }
 
     @Override
