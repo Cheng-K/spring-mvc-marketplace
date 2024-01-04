@@ -36,6 +36,7 @@ public class ProductDto {
     @NotNull(message = "Product's condition must be specified")
     private Condition condition;
     private String image;
+    private UserDto seller;
     @JsonIgnore
     private MultipartFile imageFile;
 
@@ -44,7 +45,7 @@ public class ProductDto {
 
     public ProductDto(Integer id, String title, Double price, String description, CategoryDto category,
             LocalDateTime listedOn,
-            Condition condition, String image) {
+            Condition condition, String image, UserDto seller) {
         this.id = id;
         this.title = title;
         this.price = price;
@@ -53,6 +54,7 @@ public class ProductDto {
         this.listedOn = listedOn;
         this.condition = condition;
         this.image = image;
+        this.seller = seller;
     }
 
     public Integer getId() {
@@ -125,6 +127,14 @@ public class ProductDto {
 
     public void setImageFile(MultipartFile imageFile) {
         this.imageFile = imageFile;
+    }
+
+    public UserDto getSeller() {
+        return seller;
+    }
+
+    public void setSeller(UserDto seller) {
+        this.seller = seller;
     }
 
     @Override

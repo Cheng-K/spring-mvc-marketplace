@@ -18,11 +18,11 @@ public class Products {
     private LocalDateTime listedOn;
     private Condition condition;
     private String image;
-    private Integer sellerId = 1;
+    private Integer sellerId;
 
     public Products(Integer id, String title, Double price, String description, Integer categoryId,
             LocalDateTime listedOn,
-            Condition condition, String image) {
+            Condition condition, String image, Integer sellerId) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -31,6 +31,7 @@ public class Products {
         this.condition = condition;
         this.image = image;
         this.price = price;
+        this.sellerId = sellerId;
     }
 
     public Integer getId() {
@@ -103,6 +104,10 @@ public class Products {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Integer getSellerId() {
+        return sellerId;
     }
 
 }
