@@ -14,9 +14,11 @@
       <body>
         <div class="container mt-5" th:object="${product}">
           <div class="row">
-            <div class="col-md-6 pe-5">
+            <div
+              class="col-md-6 pe-5 d-flex justify-content-center align-items-center"
+            >
               <img th:src=@{/img/{imageFile}(imageFile=*{image})}
-              class="img-fluid" alt="Product Image" />
+              class="img-fluid product-img" alt="Product Image" />
             </div>
             <div class="col-md-6">
               <h2 class="my-3" th:text="*{title}">Product Title</h2>
@@ -42,25 +44,54 @@ Product Description</pre
                 Uploaded on: Date and Time
               </p>
               <h4 class="my-3">Seller Information</h4>
-              <p>Seller Name</p>
-              <p>Contact: Seller Contact</p>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col">
               <a
-                th:href="@{/products/{id}/edit(id = ${product.id})}"
-                class="btn btn-secondary"
-                >Edit product</a
+                class="d-flex align-items-center text-decoration-none text-reset mb-4"
+                th:href="@{/profiles/{username}(username=*{seller.username})}"
               >
-            </div>
-            <div class="col">
-              <form
-                th:action="@{/products/{id}(id = ${product.id})}"
-                th:method="delete"
-              >
-                <button class="btn btn-danger">Delete</button>
-              </form>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="28"
+                  height="28"
+                  fill="currentColor"
+                  class="bi bi-person-circle me-2"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                  <path
+                    fill-rule="evenodd"
+                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
+                  />
+                </svg>
+                <span class="fs-5" th:text="*{seller.username}"></span>
+              </a>
+              <div class="d-flex justify-space-between">
+                <a
+                  th:href="@{#}"
+                  class="btn btn-primary flex-grow-1 me-3"
+                  th:if="${!#strings.equals(#authentication.name, product.seller.username)}"
+                  >Buy now</a
+                >
+                <a
+                  th:href="@{#}"
+                  class="btn btn-outline-secondary flex-grow-1 me-3"
+                  th:if="${!#strings.equals(#authentication.name, product.seller.username)}"
+                  >Add to cart</a
+                >
+                <a
+                  th:href="@{/products/{id}/edit(id = ${product.id})}"
+                  class="btn btn-secondary flex-grow-1 me-3"
+                  th:if="${#strings.equals(#authentication.name, product.seller.username)}"
+                  >Edit product</a
+                >
+                <form
+                  th:action="@{/products/{id}(id = ${product.id})}"
+                  th:method="delete"
+                  class="flex-grow-1 ms-3"
+                  th:if="${#strings.equals(#authentication.name, product.seller.username)}"
+                >
+                  <button class="btn btn-danger w-100">Delete</button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
