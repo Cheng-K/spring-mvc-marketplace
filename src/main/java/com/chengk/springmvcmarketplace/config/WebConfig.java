@@ -11,6 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.chengk.springmvcmarketplace.domain.CategoryDtoFormatter;
+import com.chengk.springmvcmarketplace.domain.UserDtoFormatter;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -24,11 +25,17 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(final FormatterRegistry registry) {
         registry.addFormatter(categoryDtoFormatter());
+        registry.addFormatter(userDtoFormatter());
     }
 
     @Bean
     public CategoryDtoFormatter categoryDtoFormatter() {
         return new CategoryDtoFormatter();
+    }
+
+    @Bean
+    public UserDtoFormatter userDtoFormatter() {
+        return new UserDtoFormatter();
     }
 
     @Bean

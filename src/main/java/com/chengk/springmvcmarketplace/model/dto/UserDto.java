@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -21,6 +22,7 @@ public class UserDto {
     @NotBlank(message = "Email cannot be blank")
     @Email(message = "Please provide a valid email address")
     private String email;
+    @JsonIgnore
     private String password;
     private Set<RoleDto> roles = new HashSet<>();
 
@@ -74,6 +76,7 @@ public class UserDto {
         this.roles = roles;
     }
 
+    @JsonIgnore
     public Set<SimpleGrantedAuthority> getGrantedAuthorities() {
         return roles.stream().map((roleDto) -> new SimpleGrantedAuthority(roleDto.getName()))
                 .collect(Collectors.toSet());
