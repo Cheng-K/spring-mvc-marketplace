@@ -17,13 +17,16 @@ public class Users {
     private String password;
     @MappedCollection(idColumn = "user_id")
     private Set<RoleRef> roles = new HashSet<>();
+    private String profilePicture;
 
-    public Users(Integer id, String username, String email, String password, Set<RoleRef> roles) {
+    public Users(Integer id, String username, String email, String password, Set<RoleRef> roles,
+            String profilePicture) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
         this.roles = roles;
+        this.profilePicture = profilePicture;
     }
 
     public Integer getId() {
@@ -69,4 +72,13 @@ public class Users {
     public void addRole(Roles role) {
         roles.add(new RoleRef(role.getId()));
     }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
 }

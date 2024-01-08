@@ -35,7 +35,8 @@ public class UserDtoConverter implements DtoConverter<Users, UserDto> {
         for (var role : roles) {
             roleDto.add(roleDtoConverter.convertToDto(role));
         }
-        return new UserDto(element.getId(), element.getUsername(), element.getEmail(), roleDto);
+        return new UserDto(element.getId(), element.getUsername(), element.getEmail(), roleDto,
+                element.getProfilePicture());
     }
 
     @Override
@@ -44,7 +45,8 @@ public class UserDtoConverter implements DtoConverter<Users, UserDto> {
                 : passwordEncoder.encode(element.getPassword());
         Set<RoleRef> roleRefs = element.getRoles().stream().map((role) -> new RoleRef(role.getId()))
                 .collect(Collectors.toSet());
-        return new Users(element.getId(), element.getUsername(), element.getEmail(), password, roleRefs);
+        return new Users(element.getId(), element.getUsername(), element.getEmail(), password, roleRefs,
+                element.getProfilePicturePath());
     }
 
 }

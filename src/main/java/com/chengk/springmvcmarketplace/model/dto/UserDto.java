@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,12 +26,16 @@ public class UserDto {
     @JsonIgnore
     private String password;
     private Set<RoleDto> roles = new HashSet<>();
+    @JsonIgnore
+    private MultipartFile uploadedProfilePicture;
+    private String profilePicturePath;
 
-    public UserDto(Integer id, String username, String email, Set<RoleDto> roles) {
+    public UserDto(Integer id, String username, String email, Set<RoleDto> roles, String profilePicturePath) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.roles = roles;
+        this.profilePicturePath = profilePicturePath;
     }
 
     public UserDto() {
@@ -91,6 +96,22 @@ public class UserDto {
             e.printStackTrace();
             return "";
         }
+    }
+
+    public MultipartFile getUploadedProfilePicture() {
+        return uploadedProfilePicture;
+    }
+
+    public void setUploadedProfilePicture(MultipartFile uploadedImage) {
+        this.uploadedProfilePicture = uploadedImage;
+    }
+
+    public String getProfilePicturePath() {
+        return profilePicturePath;
+    }
+
+    public void setProfilePicturePath(String profilePicturePath) {
+        this.profilePicturePath = profilePicturePath;
     }
 
 }

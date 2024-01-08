@@ -2,6 +2,7 @@ package com.chengk.springmvcmarketplace.controller;
 
 import java.text.MessageFormat;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.chengk.springmvcmarketplace.domain.UserService;
+import com.chengk.springmvcmarketplace.model.dto.HttpErrorDto;
 import com.chengk.springmvcmarketplace.model.dto.UserDto;
 
 import jakarta.validation.Valid;
@@ -33,9 +35,12 @@ public class ProfileController {
     public String getProfile(@PathVariable("username") String username, Model model) {
         UserDto found = userService.getUserByUsername(username);
         if (found == null) {
-            return "404";
+            model.addAttribute("error", new HttpErrorDto(HttpStatus.NOT_FOUND, "User Profile Not Found",
+                    MessageFormat.format("Unable to find user profile with username {0}", username)));
+            return "http-error";
         }
-        UserDto editUser = new UserDto(found.getId(), found.getUsername(), found.getEmail(), found.getRoles());
+        UserDto editUser = new UserDto(found.getId(), found.getUsername(), found.getEmail(), found.getRoles(),
+                found.getProfilePicturePath());
         model.addAttribute("editUser", editUser);
         model.addAttribute("user", found);
         return "profiles-detail";
