@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +21,7 @@ import com.chengk.springmvcmarketplace.domain.CategoryService;
 import com.chengk.springmvcmarketplace.domain.ProductsService;
 import com.chengk.springmvcmarketplace.domain.UserService;
 import com.chengk.springmvcmarketplace.model.dto.CategoryDto;
+import com.chengk.springmvcmarketplace.model.dto.HttpErrorDto;
 import com.chengk.springmvcmarketplace.model.dto.ProductDto;
 import com.chengk.springmvcmarketplace.model.dto.UserDto;
 import com.chengk.springmvcmarketplace.model.value_objects.Condition;
@@ -81,18 +83,21 @@ public class ProductsController {
     @GetMapping("/{productId}")
     public String getProductDetails(@PathVariable("productId") Integer productId, Model model) {
         ProductDto productDto = productsService.getProductById(productId);
-        if (productDto == null)
-            return "404";
+        if (productDto == null) {
+            model.addAttribute("error", HttpErrorDto.createProductNotFoundError());
+            return "http-error";
+        }
         model.addAttribute("product", productDto);
         return "products-detail";
     }
 
     @DeleteMapping("/{productId}")
-    public String deleteProduct(@PathVariable("productId") Integer productId, Principal principal) {
+    public String deleteProduct(@PathVariable("productId") Integer productId, Principal principal, Model model) {
         ProductDto productDto = productsService.getProductById(productId);
         if (!productDto.getSeller().getUsername().equals(principal.getName())) {
-            // return error page
-            return "404";
+            model.addAttribute("error", new HttpErrorDto(HttpStatus.UNAUTHORIZED, "Cannot delete product",
+                    "Unexpected error encountered when deleting the product"));
+            return "http-error";
         }
 
         productsService.removeProduct(productId);
@@ -102,8 +107,10 @@ public class ProductsController {
     @GetMapping("/{productId}/edit")
     public String getEditProductForm(@PathVariable("productId") Integer productId, Model model) {
         ProductDto productDto = productsService.getProductById(productId);
-        if (productDto == null)
-            return "404";
+        if (productDto == null) {
+            model.addAttribute("error", HttpErrorDto.createProductNotFoundError());
+            return "http-error";
+        }
         model.addAttribute("product", productDto);
         List<CategoryDto> categories = categoryService.getAllCategories();
         model.addAttribute("availableCategories", categories);
