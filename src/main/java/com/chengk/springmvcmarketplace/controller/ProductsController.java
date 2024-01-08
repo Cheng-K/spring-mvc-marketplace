@@ -1,5 +1,6 @@
 package com.chengk.springmvcmarketplace.controller;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.chengk.springmvcmarketplace.domain.CategoryService;
 import com.chengk.springmvcmarketplace.domain.ProductsService;
+import com.chengk.springmvcmarketplace.domain.UserService;
 import com.chengk.springmvcmarketplace.model.dto.CategoryDto;
 import com.chengk.springmvcmarketplace.model.dto.ProductDto;
+import com.chengk.springmvcmarketplace.model.dto.UserDto;
 import com.chengk.springmvcmarketplace.model.value_objects.Condition;
 
 import jakarta.validation.Valid;
@@ -29,10 +32,13 @@ public class ProductsController {
 
     private ProductsService productsService;
     private CategoryService categoryService;
+    private UserService userService;
 
-    public ProductsController(ProductsService productsService, CategoryService categoryService) {
+    public ProductsController(ProductsService productsService, CategoryService categoryService,
+            UserService userService) {
         this.productsService = productsService;
         this.categoryService = categoryService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -56,7 +62,7 @@ public class ProductsController {
 
     @PostMapping("/add")
     public String postAddProductsForm(@ModelAttribute("newProduct") @Valid ProductDto productDto,
-            BindingResult result, Model model) {
+            BindingResult result, Model model, Principal principal) {
         if (productDto.getImageFile() == null || productDto.getImageFile().isEmpty()) {
             result.rejectValue("imageFile", "no.image.uploaded", "Product image must be uploaded.");
         }
@@ -65,7 +71,9 @@ public class ProductsController {
             model.addAttribute("availableCategories", categories);
             return "products-add";
         }
+        UserDto seller = userService.getUserByUsername(principal.getName());
         productDto.setListedOn(LocalDateTime.now());
+        productDto.setSeller(seller);
         productsService.addNewProduct(productDto);
         return "redirect:/products";
     }
@@ -80,7 +88,13 @@ public class ProductsController {
     }
 
     @DeleteMapping("/{productId}")
-    public String deleteProduct(@PathVariable("productId") Integer productId) {
+    public String deleteProduct(@PathVariable("productId") Integer productId, Principal principal) {
+        ProductDto productDto = productsService.getProductById(productId);
+        if (!productDto.getSeller().getUsername().equals(principal.getName())) {
+            // return error page
+            return "404";
+        }
+
         productsService.removeProduct(productId);
         return "redirect:/products";
     }
