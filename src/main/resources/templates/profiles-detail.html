@@ -7,6 +7,7 @@
 >
   <head>
     <title>Home</title>
+    <link rel="stylesheet" th:href="@{/styles/profiles-detail.css}" />
   </head>
   <body>
     <main
@@ -59,13 +60,18 @@
                   th:method="post"
                   th:action="@{/profiles/{userId}/edit(userId = ${user.id})}"
                   th:object="${editUser}"
+                  enctype="multipart/form-data"
                 >
                   <!-- Profile picture -->
-                  <div class="mb-3 text-center">
+                  <div
+                    class="mb-3 text-center"
+                    th:classappend="${editUser.profilePicturePath == null ? '' : 'd-none'}"
+                    id="default-profile-picture"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="45"
-                      height="45"
+                      width="55"
+                      height="55"
                       fill="currentColor"
                       class="bi bi-person-circle mb-3"
                       viewBox="0 0 16 16"
@@ -76,6 +82,38 @@
                         d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
                       />
                     </svg>
+                  </div>
+                  <div
+                    class="mb-3 text-center"
+                    th:classappend="${editUser.profilePicturePath != null ? '' : 'd-none'}"
+                    id="profile-picture"
+                  >
+                    <img
+                    th:src=@{/img/{imageFile}(imageFile=${editUser.profilePicturePath})
+                    alt="Profile Picture" class="profile-picture"
+                    th:if="${editUser.profilePicturePath != null}">
+                    <img
+                      th:if="${editUser.profilePicturePath == null}"
+                      class="profile-picture"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="profilePicture" class="form-label"
+                      >Upload New Profile Picture</label
+                    >
+                    <input
+                      type="file"
+                      class="form-control"
+                      th:field="*{uploadedProfilePicture}"
+                      placeholder="Upload new profile picture"
+                      accept="image/*"
+                      th:errorclass="is-invalid"
+                    />
+                    <p
+                      th:if="${#fields.hasErrors('uploadedProfilePicture')}"
+                      th:errors="*{uploadedProfilePicture}"
+                      class="invalid-feedback"
+                    ></p>
                   </div>
                   <!-- Username -->
                   <div class="mb-3">
@@ -147,5 +185,9 @@
         location.href = `${location.pathname}?${params.toString()}`;
       }
     </script>
+    <script
+      th:if="${param.edit != null && #strings.equals(param.edit, 'true')}"
+      th:src="@{/js/profiles-detail.js}"
+    ></script>
   </div>
 </html>
