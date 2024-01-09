@@ -90,6 +90,7 @@ public class ProfileController {
             return "profiles-detail";
         }
 
+        currentUser.setUploadedProfilePicture(newUser.getUploadedProfilePicture());
         userService.editUser(currentUser);
 
         // dynamically update logged in user details

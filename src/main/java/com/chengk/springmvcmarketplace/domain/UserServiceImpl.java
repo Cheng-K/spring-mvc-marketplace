@@ -1,5 +1,6 @@
 package com.chengk.springmvcmarketplace.domain;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -12,10 +13,13 @@ import com.chengk.springmvcmarketplace.repository.UsersRepository;
 public class UserServiceImpl implements UserService {
 
     private UsersRepository usersRepository;
+    private StorageService storageService;
     private DtoConverter<Users, UserDto> userDtoConverter;
 
-    public UserServiceImpl(UsersRepository usersRepository, DtoConverter<Users, UserDto> userDtoConverter) {
+    public UserServiceImpl(UsersRepository usersRepository, StorageService storageService,
+            DtoConverter<Users, UserDto> userDtoConverter) {
         this.usersRepository = usersRepository;
+        this.storageService = storageService;
         this.userDtoConverter = userDtoConverter;
     }
 
@@ -57,6 +61,35 @@ public class UserServiceImpl implements UserService {
         if (editedUser.getPassword() == null) {
             editedUser.setPassword(user.get().getPassword());
         }
+
+        // check picture
+        String profilePicture = user.get().getProfilePicture();
+        if (profilePicture != null && !profilePicture.isEmpty() && userDto.getUploadedProfilePicture() != null
+                && !userDto.getUploadedProfilePicture().isEmpty()) {
+            // delete the old picture
+            try {
+                storageService.deleteFile(profilePicture);
+            } catch (Exception e) {
+                System.err.println("Cannot delete file");
+                e.printStackTrace();
+                return;
+            }
+        }
+
+        if (userDto.getUploadedProfilePicture() != null && !userDto.getUploadedProfilePicture().isEmpty()) {
+            String fileName = storageService
+                    .replaceFileNameWithUUID(userDto.getUploadedProfilePicture().getOriginalFilename());
+            try {
+                storageService.saveFile(userDto.getUploadedProfilePicture().getBytes(), fileName,
+                        "./src/main/resources/static/img/profiles");
+            } catch (IOException e) {
+                System.err.println("Cannot read uploaded file");
+                e.printStackTrace();
+                return;
+            }
+            editedUser.setProfilePicture(fileName);
+        }
+
         usersRepository.save(editedUser);
     }
 
