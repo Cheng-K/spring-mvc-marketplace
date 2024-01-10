@@ -1,6 +1,7 @@
 package com.chengk.springmvcmarketplace.domain;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -58,9 +59,6 @@ public class UserServiceImpl implements UserService {
     public void editUser(UserDto userDto) {
         Optional<Users> user = usersRepository.findById(userDto.getId());
         Users editedUser = userDtoConverter.convertToEntity(userDto);
-        if (editedUser.getPassword() == null) {
-            editedUser.setPassword(user.get().getPassword());
-        }
 
         // check picture
         String profilePicture = user.get().getProfilePicture();
@@ -68,7 +66,7 @@ public class UserServiceImpl implements UserService {
                 && !userDto.getUploadedProfilePicture().isEmpty()) {
             // delete the old picture
             try {
-                storageService.deleteFile(profilePicture);
+                storageService.deleteFile("./src/main/resources/static/img/profiles/" + profilePicture);
             } catch (Exception e) {
                 System.err.println("Cannot delete file");
                 e.printStackTrace();
@@ -88,6 +86,10 @@ public class UserServiceImpl implements UserService {
                 return;
             }
             editedUser.setProfilePicture(fileName);
+        }
+
+        if (editedUser.getPassword() == null) {
+            editedUser.setPassword(user.get().getPassword());
         }
 
         usersRepository.save(editedUser);

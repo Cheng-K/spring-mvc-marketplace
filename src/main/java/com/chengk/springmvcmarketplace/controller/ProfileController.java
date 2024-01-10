@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.chengk.springmvcmarketplace.domain.UserService;
 import com.chengk.springmvcmarketplace.model.dto.HttpErrorDto;
+import com.chengk.springmvcmarketplace.model.dto.LoggedInUser;
 import com.chengk.springmvcmarketplace.model.dto.UserDto;
 
 import jakarta.validation.Valid;
@@ -92,9 +93,12 @@ public class ProfileController {
 
         currentUser.setUploadedProfilePicture(newUser.getUploadedProfilePicture());
         userService.editUser(currentUser);
+        currentUser = userService.getUserById(userId);
 
         // dynamically update logged in user details
-        Authentication newAuth = new UsernamePasswordAuthenticationToken(currentUser.getUsername(),
+        LoggedInUser loggedInCurrent = new LoggedInUser(currentUser.getUsername(), "",
+                currentUser.getGrantedAuthorities(), currentUser.getProfilePicturePath());
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(loggedInCurrent,
                 currentUser.getPassword(), currentUser.getGrantedAuthorities());
         SecurityContextHolder.getContext().setAuthentication(newAuth);
 
