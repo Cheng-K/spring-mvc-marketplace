@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.chengk.springmvcmarketplace.model.dto.LoggedInUser;
 import com.chengk.springmvcmarketplace.model.entity.Roles;
 import com.chengk.springmvcmarketplace.model.entity.Users;
 import com.chengk.springmvcmarketplace.repository.RolesRepository;
@@ -40,6 +41,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         for (var role : roles) {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         }
-        return User.withUsername(username).password(user.getPassword()).authorities(authorities).build();
+        return new LoggedInUser(username, user.getPassword(), authorities, user.getProfilePicture());
     }
 }
