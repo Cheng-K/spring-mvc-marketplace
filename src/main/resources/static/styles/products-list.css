@@ -1,11 +1,10 @@
 .product-img {
-  height: 300px;
   width: 100%;
-  object-fit: fill;
+  aspect-ratio: 1/1;
 }
 
 .product-card {
-  max-height: 33rem;
+  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   border-width: 0px;
@@ -17,11 +16,6 @@
   transform: scale(1.05);
   transition: all 0.2s;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-}
-
-.product-card-description {
-  text-overflow: ellipsis;
-  overflow: hidden;
 }
 
 .category-list-item {

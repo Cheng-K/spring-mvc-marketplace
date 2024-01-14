@@ -18,5 +18,21 @@ function addClickListenerToCategoryList() {
   });
 }
 
+function calculateDaysAgoForProducts() {
+  const allProductCards = document.querySelectorAll(".product-card");
+  allProductCards.forEach((product) => {
+    const daysago = product.querySelector(".card-body *[data-listed-on]");
+    const listedDate = new Date(daysago.dataset.listedOn);
+    const numberOfDaysAgo = Math.round(
+      (Date.now() - listedDate) / (1000 * 60 * 60 * 24)
+    );
+    if (numberOfDaysAgo == 0) {
+      daysago.textContent = `Listed today`;
+    } else {
+      daysago.textContent = `Listed ${numberOfDaysAgo} days ago`;
+    }
+  });
+}
+calculateDaysAgoForProducts();
 addClickListenerToProductCards();
 addClickListenerToCategoryList();
