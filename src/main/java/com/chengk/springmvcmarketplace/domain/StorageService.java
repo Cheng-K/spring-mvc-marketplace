@@ -6,4 +6,6 @@ public interface StorageService {
     void deleteFile(String filePath) throws Exception;
 
     String replaceFileNameWithUUID(String fileName);
+
+    boolean fileExists(String filePath);
 }

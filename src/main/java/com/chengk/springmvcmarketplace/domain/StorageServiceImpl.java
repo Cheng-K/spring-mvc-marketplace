@@ -41,4 +41,10 @@ public class StorageServiceImpl implements StorageService {
         return newFileName;
     }
 
+    @Override
+    public boolean fileExists(String filePath) {
+        File file = new File(filePath);
+        return file.isFile() && file.exists();
+    }
+
 }
