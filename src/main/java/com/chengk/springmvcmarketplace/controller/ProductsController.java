@@ -119,7 +119,13 @@ public class ProductsController {
 
     @PutMapping("/{productId}")
     public String updateProductDetails(@PathVariable("productId") Integer productId,
-            @ModelAttribute("product") @Valid ProductDto productDto, BindingResult bindingResult, Model model) {
+            @ModelAttribute("product") @Valid ProductDto productDto, BindingResult bindingResult, Model model,
+            Principal principal) {
+        if (!productDto.getSeller().getUsername().equals(principal.getName())) {
+            model.addAttribute("error", new HttpErrorDto(HttpStatus.UNAUTHORIZED, "Cannot update product",
+                    "Unexpected error encountered when updating the product"));
+            return "http-error";
+        }
         if (bindingResult.hasErrors()) {
             List<CategoryDto> categories = categoryService.getAllCategories();
             model.addAttribute("availableCategories", categories);
