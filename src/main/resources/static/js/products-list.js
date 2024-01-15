@@ -33,6 +33,21 @@ function calculateDaysAgoForProducts() {
     }
   });
 }
+
+function sortProductsByLatest() {
+  const currentURL = new URL(window.location.href);
+  currentURL.searchParams.set("sortBy", "latest");
+  currentURL.searchParams.delete("order");
+  window.location.href = currentURL.toString();
+}
+
+function sortProductsByPrice(order) {
+  const currentURL = new URL(window.location.href);
+  currentURL.searchParams.set("sortBy", "price");
+  currentURL.searchParams.set("order", order);
+  window.location.href = currentURL.toString();
+}
+
 calculateDaysAgoForProducts();
 addClickListenerToProductCards();
 addClickListenerToCategoryList();

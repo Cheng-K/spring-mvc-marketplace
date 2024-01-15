@@ -53,6 +53,32 @@
               </button>
             </form>
           </div>
+          <div class="row mb-4">
+            <div class="col">
+              <span class="me-2">Sort by: </span>
+              <button
+                class="btn me-2"
+                th:classappend="${#strings.equals(param.sortBy, 'latest') ? 'btn-primary' : 'btn-secondary'}"
+                onclick="sortProductsByLatest()"
+              >
+                Latest
+              </button>
+              <button
+                class="btn me-2"
+                th:classappend="${#strings.equals(param.sortBy, 'price') && #strings.equals(param.order, 'asc') ? 'btn-primary' : 'btn-secondary'}"
+                onclick="sortProductsByPrice('asc')"
+              >
+                Price (Low to High)
+              </button>
+              <button
+                class="btn"
+                th:classappend="${#strings.equals(param.sortBy, 'price') && #strings.equals(param.order, 'desc') ? 'btn-primary' : 'btn-secondary'}"
+                onclick="sortProductsByPrice('desc')"
+              >
+                Price (High to Low)
+              </button>
+            </div>
+          </div>
           <div class="row">
             <div class="col-md-4 col-lg-3 mb-4" th:each="product : ${products}">
               <div class="card product-card" th:data-product-id="${product.id}">
