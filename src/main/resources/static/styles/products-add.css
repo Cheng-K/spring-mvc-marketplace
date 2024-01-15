@@ -3,3 +3,10 @@
   height: 400px;
   object-fit: contain;
 }
+
+.seller-img {
+  border-radius: 50%;
+  width: 54px;
+  height: 54px;
+  margin-right: 10px;
+}

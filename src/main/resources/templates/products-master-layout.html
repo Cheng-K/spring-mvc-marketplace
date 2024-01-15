@@ -80,7 +80,7 @@
                 />
               </svg>
               <img
-                th:src="@{/img/profiles/{imageFile} (imageFile = ${#authentication.principal.profilePicture})}"
+                th:src="@{/images/profiles/{imageFile} (imageFile = ${#authentication.principal.profilePicture})}"
                 class="profile-picture-navbar"
                 th:if="${#authentication.principal.profilePicture != null}"
               />

@@ -42,13 +42,21 @@
                   />
                 </svg>
                 <img
-                th:src=@{/img/profiles/{imageFile}(imageFile=${user.profilePicturePath})}
+                th:src=@{/images/profiles/{imageFile}(imageFile=${user.profilePicturePath})}
                 alt="Profile Picture" class="profile-picture mb-3"
                 th:if="${user.profilePicturePath != null}" >
                 <!-- Username -->
                 <h4 class="card-title" th:text="*{username}">John Doe</h4>
                 <!-- Email -->
-                <p class="card-text" th:text="*{email}">john.doe@example.com</p>
+                <p class="card-text mb-2" th:text="*{email}">
+                  john.doe@example.com
+                </p>
+                <div th:each="item : *{roles}" class="mb-3">
+                  <span
+                    class="badge rounded-pill text-bg-secondary"
+                    th:text="${#strings.capitalize(#strings.toLowerCase(item.name))}"
+                  ></span>
+                </div>
                 <!-- Edit button -->
                 <button
                   onclick="redirectToEditProfileURL()"
@@ -94,7 +102,7 @@
                     id="profile-picture"
                   >
                     <img
-                    th:src=@{/img/profiles/{imageFile}(imageFile=${user.profilePicturePath})}
+                    th:src=@{/images/profiles/{imageFile}(imageFile=${user.profilePicturePath})}
                     alt="Profile Picture" class="profile-picture"
                     th:if="${user.profilePicturePath != null}">
                     <img

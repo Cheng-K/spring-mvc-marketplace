@@ -73,14 +73,14 @@
                     />
                   </svg>
                   <img
-                    th:src="@{/img/profiles/{imageFile} (imageFile = ${product.seller.profilePicturePath})}"
+                    th:src="@{/images/profiles/{imageFile} (imageFile = ${product.seller.profilePicturePath})}"
                     class="product-profile-pic"
                     th:if="${product.seller.profilePicturePath != null}"
                   />
                   <span th:text="${product.seller.username}"></span>
                 </div>
                 <img
-                  th:src="@{/img/{imageFile}(imageFile=${product.image})}"
+                  th:src="@{/images/products/{imageFile}(imageFile=${product.image})}"
                   class="card-img-top product-img"
                   th:alt="${product.title}"
                 />
