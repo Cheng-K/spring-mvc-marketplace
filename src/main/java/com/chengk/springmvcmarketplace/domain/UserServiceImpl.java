@@ -1,7 +1,6 @@
 package com.chengk.springmvcmarketplace.domain;
 
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -66,7 +65,7 @@ public class UserServiceImpl implements UserService {
                 && !userDto.getUploadedProfilePicture().isEmpty()) {
             // delete the old picture
             try {
-                storageService.deleteFile("./src/main/resources/static/img/profiles/" + profilePicture);
+                storageService.deleteFile("./src/main/resources/images/profiles/" + profilePicture);
             } catch (Exception e) {
                 System.err.println("Cannot delete file");
                 e.printStackTrace();
@@ -79,7 +78,7 @@ public class UserServiceImpl implements UserService {
                     .replaceFileNameWithUUID(userDto.getUploadedProfilePicture().getOriginalFilename());
             try {
                 storageService.saveFile(userDto.getUploadedProfilePicture().getBytes(), fileName,
-                        "./src/main/resources/static/img/profiles");
+                        "./src/main/resources/images/profiles");
             } catch (IOException e) {
                 System.err.println("Cannot read uploaded file");
                 e.printStackTrace();

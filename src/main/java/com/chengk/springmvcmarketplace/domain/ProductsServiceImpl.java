@@ -60,7 +60,7 @@ public class ProductsServiceImpl implements ProductsService {
     public void editProduct(ProductDto productDto) {
         if (productDto.getImageFile() != null && !productDto.getImageFile().isEmpty()) {
             try {
-                storageService.deleteFile("./src/main/resources/static/img/" + productDto.getImage());
+                storageService.deleteFile("./src/main/resources/images/products/" + productDto.getImage());
                 String fileName = saveImageFile(productDto);
                 productDto.setImage(fileName);
             } catch (IOException e) {
@@ -79,7 +79,7 @@ public class ProductsServiceImpl implements ProductsService {
     private String saveImageFile(ProductDto productDto) throws IOException {
         String fileName = storageService.replaceFileNameWithUUID(productDto.getImageFile().getOriginalFilename());
         storageService.saveFile(productDto.getImageFile().getBytes(),
-                fileName, "./src/main/resources/static/img");
+                fileName, "./src/main/resources/images/products");
         return fileName;
     }
 
@@ -89,7 +89,7 @@ public class ProductsServiceImpl implements ProductsService {
         if (product == null)
             return;
         try {
-            storageService.deleteFile("./src/main/resources/static/img/" + product.getImage());
+            storageService.deleteFile("./src/main/resources/images/products/" + product.getImage());
         } catch (IOException e) {
             System.err.println("Cannot read the bytes of multipart file");
             e.printStackTrace();
