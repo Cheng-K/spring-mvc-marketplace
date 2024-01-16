@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.chengk.springmvcmarketplace.model.dto.ProductDto;
@@ -115,6 +116,27 @@ public class ProductsServiceImpl implements ProductsService {
     @Override
     public List<ProductDto> getProductsByCategoryId(Integer categoryId) {
         List<Products> found = productRepository.findByCategoryId(categoryId);
+        List<ProductDto> result = new ArrayList<>();
+        for (var product : found) {
+            result.add(productDtoConverter.convertToDto(product));
+        }
+        return result;
+    }
+
+    @Override
+    public List<ProductDto> getAllProductsWithSort(Sort sort) {
+        List<ProductDto> result = new ArrayList<>();
+        Iterable<Products> products = productRepository.findAllBy(sort);
+        for (var product : products) {
+            result.add(productDtoConverter.convertToDto(product));
+        }
+        return result;
+    }
+
+    @Override
+    public List<ProductDto> getProductsByQueryWithSort(String query, Sort sort) {
+        List<Products> found = productRepository.findByTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(query,
+                query, sort);
         List<ProductDto> result = new ArrayList<>();
         for (var product : found) {
             result.add(productDtoConverter.convertToDto(product));
