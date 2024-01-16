@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,8 +45,22 @@ public class ProductsController {
     }
 
     @GetMapping
-    public String getAllProducts(Model model) {
-        List<ProductDto> products = productsService.getAllProducts();
+    public String getAllProducts(@RequestParam(name = "sortBy", required = false) String sortBy,
+            @RequestParam(name = "order", required = false) String order,
+            Model model) {
+        List<ProductDto> products = null;
+        if (sortBy != null && sortBy.equals("latest")) {
+            products = productsService.getAllProductsWithSort(Sort.by("listedOn").descending());
+        } else if (sortBy != null && sortBy.equals("price")) {
+            if (order != null && order.equals("desc")) {
+                products = productsService.getAllProductsWithSort(Sort.by("price").descending());
+            } else {
+                products = productsService.getAllProductsWithSort(Sort.by("price").ascending());
+            }
+        } else {
+            products = productsService.getAllProducts();
+        }
+
         List<CategoryDto> categories = categoryService.getAllCategories();
         model.addAttribute("availableCategories", categories);
         model.addAttribute("products", products);
@@ -137,13 +152,28 @@ public class ProductsController {
     }
 
     @GetMapping("/search")
-    public String searchProducts(@RequestParam("query") String query, Model model) {
+    public String searchProducts(@RequestParam("query") String query,
+            @RequestParam(name = "sortBy", required = false) String sortBy,
+            @RequestParam(name = "order", required = false) String order, Model model) {
         if (query == null || query.isBlank()) {
             return "redirect:/products";
         }
+        List<ProductDto> products = null;
+        if (sortBy != null && sortBy.equals("latest")) {
+            products = productsService.getProductsByQueryWithSort(query, Sort.by("listedOn").descending());
+        } else if (sortBy != null && sortBy.equals("price")) {
+            if (order != null && order.equals("desc")) {
+                products = productsService.getProductsByQueryWithSort(query, Sort.by("price").descending());
+            } else {
+                products = productsService.getProductsByQueryWithSort(query, Sort.by("price").ascending());
+            }
+        } else {
+            products = productsService.getProductsByQuery(query);
+        }
+
         List<CategoryDto> categories = categoryService.getAllCategories();
         model.addAttribute("availableCategories", categories);
-        model.addAttribute("products", productsService.getProductsByQuery(query));
+        model.addAttribute("products", products);
         return "products-list";
     }
 
