@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.chengk.springmvcmarketplace.domain.UserService;
 import com.chengk.springmvcmarketplace.model.dto.HttpErrorDto;
@@ -51,7 +52,7 @@ public class ProfileController {
     @PostMapping("/{userId}/edit")
     public String editProfile(@PathVariable("userId") Integer userId,
             @Valid @ModelAttribute("editUser") UserDto newUser,
-            BindingResult bindingResult, Model model) {
+            BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         UserDto currentUser = userService.getUserById(userId);
 
         // check username changes
@@ -101,7 +102,7 @@ public class ProfileController {
         Authentication newAuth = new UsernamePasswordAuthenticationToken(loggedInCurrent,
                 currentUser.getPassword(), currentUser.getGrantedAuthorities());
         SecurityContextHolder.getContext().setAuthentication(newAuth);
-
+        redirectAttributes.addFlashAttribute("postRedirectMessage", "Profile updated successfully");
         return MessageFormat.format("redirect:/profiles/{0}", currentUser.getUsername());
     }
 

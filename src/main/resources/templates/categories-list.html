@@ -9,7 +9,7 @@
     <title>Categories</title>
   </head>
   <body>
-    <main layout:fragment="main">
+    <main layout:fragment="main" th:classappend="position-relative">
       <div
         class="modal fade"
         id="inputModal"
@@ -110,6 +110,25 @@
           </div>
         </div>
       </div>
+      <div
+        class="toast align-items-center text-bg-success border-0 top-0 start-50 translate-middle-x position-absolute"
+        role="alert"
+        id="toast"
+        aria-live="assertive"
+        aria-atomic="true"
+        th:if="${postRedirectMessage != null}"
+      >
+        <div class="d-flex">
+          <div class="toast-body" th:text="${postRedirectMessage}"></div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+
       <div class="container">
         <div class="d-flex mb-3">
           <h2>Categories</h2>
@@ -297,6 +316,11 @@
       if (addErrorPresent) {
         let addErrorModal = new bootstrap.Modal(`#errorModal-${addErrorPresent}`);
         addErrorModal.show();
+      }
+      const toast = document.querySelector(".toast");
+      if (toast != null) {
+        const bsToast = bootstrap.Toast.getOrCreateInstance(toast);
+        bsToast.show();
       }
     </script>
   </div>

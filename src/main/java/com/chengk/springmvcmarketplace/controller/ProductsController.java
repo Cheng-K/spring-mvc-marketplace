@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.chengk.springmvcmarketplace.domain.CategoryService;
 import com.chengk.springmvcmarketplace.domain.ProductsService;
@@ -79,7 +80,7 @@ public class ProductsController {
 
     @PostMapping("/add")
     public String postAddProductsForm(@ModelAttribute("newProduct") @Valid ProductDto productDto,
-            BindingResult result, Model model, Principal principal) {
+            BindingResult result, Model model, Principal principal, RedirectAttributes redirectAttributes) {
         if (productDto.getImageFile() == null || productDto.getImageFile().isEmpty()) {
             result.rejectValue("imageFile", "no.image.uploaded", "Product image must be uploaded.");
         }
@@ -92,6 +93,7 @@ public class ProductsController {
         productDto.setListedOn(LocalDateTime.now());
         productDto.setSeller(seller);
         productsService.addNewProduct(productDto);
+        redirectAttributes.addFlashAttribute("postRedirectMessage", "Product added successfully");
         return "redirect:/products";
     }
 
@@ -107,7 +109,8 @@ public class ProductsController {
     }
 
     @DeleteMapping("/{productId}")
-    public String deleteProduct(@PathVariable("productId") Integer productId, Principal principal, Model model) {
+    public String deleteProduct(@PathVariable("productId") Integer productId, Principal principal, Model model,
+            RedirectAttributes redirectAttributes) {
         ProductDto productDto = productsService.getProductById(productId);
         if (!productDto.getSeller().getUsername().equals(principal.getName())) {
             model.addAttribute("error", new HttpErrorDto(HttpStatus.UNAUTHORIZED, "Cannot delete product",
@@ -116,6 +119,7 @@ public class ProductsController {
         }
 
         productsService.removeProduct(productId);
+        redirectAttributes.addFlashAttribute("postRedirectMessage", "Product deleted successfully");
         return "redirect:/products";
     }
 
@@ -135,7 +139,7 @@ public class ProductsController {
     @PutMapping("/{productId}")
     public String updateProductDetails(@PathVariable("productId") Integer productId,
             @ModelAttribute("product") @Valid ProductDto productDto, BindingResult bindingResult, Model model,
-            Principal principal) {
+            Principal principal, RedirectAttributes redirectAttributes) {
         if (!productDto.getSeller().getUsername().equals(principal.getName())) {
             model.addAttribute("error", new HttpErrorDto(HttpStatus.UNAUTHORIZED, "Cannot update product",
                     "Unexpected error encountered when updating the product"));
@@ -148,6 +152,7 @@ public class ProductsController {
         }
         productDto.setId(productId);
         productsService.editProduct(productDto);
+        redirectAttributes.addFlashAttribute("postRedirectMessage", "Product updated successfully");
         return String.format("redirect:/products/%d", productId);
     }
 

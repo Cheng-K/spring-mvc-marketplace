@@ -12,8 +12,27 @@
   <body>
     <main
       layout:fragment="main"
-      th:classappend="|d-flex justify-content-center align-items-center|"
+      th:classappend="|d-flex justify-content-center align-items-center position-relative|"
     >
+      <div
+        class="toast align-items-center text-bg-success border-0 top-0 start-50 translate-middle-x position-absolute"
+        role="alert"
+        id="toast"
+        aria-live="assertive"
+        aria-atomic="true"
+        th:if="${postRedirectMessage != null}"
+      >
+        <div class="d-flex">
+          <div class="toast-body" th:text="${postRedirectMessage}"></div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-md-6">
@@ -196,6 +215,11 @@
         let params = new URLSearchParams();
         params.append("edit", "true");
         location.href = `${location.pathname}?${params.toString()}`;
+      }
+      const toast = document.querySelector(".toast");
+      if (toast != null) {
+        const bsToast = bootstrap.Toast.getOrCreateInstance(toast);
+        bsToast.show();
       }
     </script>
     <script

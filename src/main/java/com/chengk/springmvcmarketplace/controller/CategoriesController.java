@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.chengk.springmvcmarketplace.domain.CategoryService;
 import com.chengk.springmvcmarketplace.model.dto.CategoryDto;
@@ -39,7 +40,7 @@ public class CategoriesController {
     @PostMapping
     public String postNewCategory(@Valid @ModelAttribute("submittedCategory") CategoryDto categoryDto,
             BindingResult result,
-            Model model) {
+            Model model, RedirectAttributes redirectAttributes) {
 
         if (!categoryDto.getTitle().isEmpty() && categoryService.doesCategoryExists(categoryDto.getTitle())) {
             result.rejectValue("title", "duplicate.category", "Category already exist.");
@@ -53,18 +54,22 @@ public class CategoriesController {
         categoryDto.setCreatedOn(LocalDateTime.now());
         categoryDto.setLastUpdated(LocalDateTime.now());
         categoryService.addNewCategory(categoryDto);
+        redirectAttributes.addFlashAttribute("postRedirectMessage", "New category added successfully");
         return "redirect:/categories";
     }
 
     @DeleteMapping("/{categoryId}")
-    public String deleteCategory(@PathVariable("categoryId") Integer categoryId) {
+    public String deleteCategory(@PathVariable("categoryId") Integer categoryId,
+            RedirectAttributes redirectAttributes) {
         categoryService.removeCategory(categoryId);
+        redirectAttributes.addFlashAttribute("postRedirectMessage", "Category deleted successfully");
         return "redirect:/categories";
     }
 
     @PutMapping("/{categoryId}")
     public String updateCategory(@PathVariable("categoryId") Integer categoryId,
-            @Valid @ModelAttribute("submittedCategory") CategoryDto categoryDto, BindingResult result, Model model) {
+            @Valid @ModelAttribute("submittedCategory") CategoryDto categoryDto, BindingResult result, Model model,
+            RedirectAttributes redirectAttributes) {
 
         if (!categoryDto.getTitle().isEmpty() && categoryService.doesCategoryExists(categoryDto.getTitle())) {
             result.rejectValue("title", "duplicate.category", "Category already exist.");
@@ -77,6 +82,7 @@ public class CategoriesController {
         }
         categoryDto.setId(categoryId);
         categoryService.editCategory(categoryDto);
+        redirectAttributes.addFlashAttribute("postRedirectMessage", "Category updated successfully");
         return "redirect:/categories";
     }
 
