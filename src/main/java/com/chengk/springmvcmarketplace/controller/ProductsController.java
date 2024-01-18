@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -48,23 +49,27 @@ public class ProductsController {
     @GetMapping
     public String getAllProducts(@RequestParam(name = "sortBy", required = false) String sortBy,
             @RequestParam(name = "order", required = false) String order,
+            @RequestParam(name = "page", required = false) Integer page,
             Model model) {
-        List<ProductDto> products = null;
+        Slice<ProductDto> products = null;
+        if (page == null) {
+            page = 0;
+        }
         if (sortBy != null && sortBy.equals("latest")) {
-            products = productsService.getAllProductsWithSort(Sort.by("listedOn").descending());
+            products = productsService.getAllProductsWithSort(Sort.by("listedOn").descending(), page);
         } else if (sortBy != null && sortBy.equals("price")) {
             if (order != null && order.equals("desc")) {
-                products = productsService.getAllProductsWithSort(Sort.by("price").descending());
+                products = productsService.getAllProductsWithSort(Sort.by("price").descending(), page);
             } else {
-                products = productsService.getAllProductsWithSort(Sort.by("price").ascending());
+                products = productsService.getAllProductsWithSort(Sort.by("price").ascending(), page);
             }
         } else {
-            products = productsService.getAllProducts();
+            products = productsService.getAllProductsWithPagination(page);
         }
 
+        model.addAttribute("products", products);
         List<CategoryDto> categories = categoryService.getAllCategories();
         model.addAttribute("availableCategories", categories);
-        model.addAttribute("products", products);
         return "products-list";
     }
 
@@ -159,21 +164,26 @@ public class ProductsController {
     @GetMapping("/search")
     public String searchProducts(@RequestParam("query") String query,
             @RequestParam(name = "sortBy", required = false) String sortBy,
-            @RequestParam(name = "order", required = false) String order, Model model) {
+            @RequestParam(name = "order", required = false) String order,
+            @RequestParam(name = "page", required = false) Integer page,
+            Model model) {
         if (query == null || query.isBlank()) {
             return "redirect:/products";
         }
-        List<ProductDto> products = null;
+        Slice<ProductDto> products = null;
+        if (page == null) {
+            page = 0;
+        }
         if (sortBy != null && sortBy.equals("latest")) {
-            products = productsService.getProductsByQueryWithSort(query, Sort.by("listedOn").descending());
+            products = productsService.getProductsByQueryWithSort(query, Sort.by("listedOn").descending(), page);
         } else if (sortBy != null && sortBy.equals("price")) {
             if (order != null && order.equals("desc")) {
-                products = productsService.getProductsByQueryWithSort(query, Sort.by("price").descending());
+                products = productsService.getProductsByQueryWithSort(query, Sort.by("price").descending(), page);
             } else {
-                products = productsService.getProductsByQueryWithSort(query, Sort.by("price").ascending());
+                products = productsService.getProductsByQueryWithSort(query, Sort.by("price").ascending(), page);
             }
         } else {
-            products = productsService.getProductsByQuery(query);
+            products = productsService.getProductsByQuery(query, page);
         }
 
         List<CategoryDto> categories = categoryService.getAllCategories();
@@ -183,11 +193,17 @@ public class ProductsController {
     }
 
     @GetMapping("/categories/{categoryId}")
-    public String getProductsByCategory(@PathVariable("categoryId") Integer categoryId, Model model) {
+    public String getProductsByCategory(@PathVariable("categoryId") Integer categoryId,
+            @RequestParam(name = "page", required = false) Integer page, Model model) {
+        Slice<ProductDto> products = null;
+        if (page == null) {
+            page = 0;
+        }
+        products = productsService.getProductsByCategoryId(categoryId, page);
         List<CategoryDto> categories = categoryService.getAllCategories();
         model.addAttribute("availableCategories", categories);
         model.addAttribute("selectedCategory", categoryId);
-        model.addAttribute("products", productsService.getProductsByCategoryId(categoryId));
+        model.addAttribute("products", products);
         return "products-list";
     }
 

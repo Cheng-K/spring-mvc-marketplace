@@ -1,22 +1,20 @@
 package com.chengk.springmvcmarketplace.repository;
 
-import java.util.List;
-
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import com.chengk.springmvcmarketplace.model.entity.Products;
 
 @Repository
-public interface ProductRepository extends CrudRepository<Products, Integer> {
+public interface ProductRepository
+                extends PagingAndSortingRepository<Products, Integer>, CrudRepository<Products, Integer> {
 
-    List<Products> findByTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(String title, String description);
+        Slice<Products> findByTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(String title,
+                        String description, Pageable pageable);
 
-    List<Products> findByTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(String title, String description,
-            Sort sort);
+        Slice<Products> findByCategoryId(Integer categoryId, Pageable pageable);
 
-    List<Products> findByCategoryId(Integer categoryId);
-
-    List<Products> findAllBy(Sort sort);
 }

@@ -1,15 +1,15 @@
 package com.chengk.springmvcmarketplace.domain;
 
-import java.util.List;
-
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 
 import com.chengk.springmvcmarketplace.model.dto.ProductDto;
 
 public interface ProductsService {
-    List<ProductDto> getAllProducts();
 
-    List<ProductDto> getAllProductsWithSort(Sort sort);
+    Slice<ProductDto> getAllProductsWithPagination(int pageNumber);
+
+    Slice<ProductDto> getAllProductsWithSort(Sort sort, int pageNumber);
 
     void addNewProduct(ProductDto productDto);
 
@@ -19,10 +19,10 @@ public interface ProductsService {
 
     void removeProduct(Integer productId);
 
-    List<ProductDto> getProductsByQuery(String query);
+    Slice<ProductDto> getProductsByQuery(String query, int pageNumber);
 
-    List<ProductDto> getProductsByQueryWithSort(String query, Sort sort);
+    Slice<ProductDto> getProductsByQueryWithSort(String query, Sort sort, int pageNumber);
 
-    List<ProductDto> getProductsByCategoryId(Integer categoryId);
+    Slice<ProductDto> getProductsByCategoryId(Integer categoryId, int pageNumber);
 
 }
