@@ -1,6 +1,7 @@
 package com.chengk.springmvcmarketplace.controller;
 
 import java.security.Principal;
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -52,19 +53,27 @@ public class ProductsController {
             @RequestParam(name = "page", required = false) Integer page,
             Model model) {
         Slice<ProductDto> products = null;
-        if (page == null) {
-            page = 0;
+        if (page == null || page <= 0) {
+            String redirect = "redirect:/products?page=1";
+            if (sortBy != null) {
+                redirect += MessageFormat.format("&sortBy={0}", sortBy);
+            }
+            if (order != null) {
+                redirect += MessageFormat.format("&order={0}", order);
+            }
+            return redirect;
         }
+        int requestedPageInDb = page - 1;
         if (sortBy != null && sortBy.equals("latest")) {
-            products = productsService.getAllProductsWithSort(Sort.by("listedOn").descending(), page);
+            products = productsService.getAllProductsWithSort(Sort.by("listedOn").descending(), requestedPageInDb);
         } else if (sortBy != null && sortBy.equals("price")) {
             if (order != null && order.equals("desc")) {
-                products = productsService.getAllProductsWithSort(Sort.by("price").descending(), page);
+                products = productsService.getAllProductsWithSort(Sort.by("price").descending(), requestedPageInDb);
             } else {
-                products = productsService.getAllProductsWithSort(Sort.by("price").ascending(), page);
+                products = productsService.getAllProductsWithSort(Sort.by("price").ascending(), requestedPageInDb);
             }
         } else {
-            products = productsService.getAllProductsWithPagination(page);
+            products = productsService.getAllProductsWithPagination(requestedPageInDb);
         }
 
         model.addAttribute("products", products);
@@ -168,22 +177,33 @@ public class ProductsController {
             @RequestParam(name = "page", required = false) Integer page,
             Model model) {
         if (query == null || query.isBlank()) {
-            return "redirect:/products";
+            return "redirect:/products?page=1";
         }
         Slice<ProductDto> products = null;
-        if (page == null) {
-            page = 0;
+        if (page == null || page <= 0) {
+            String redirect = MessageFormat.format("redirect:/products/search?page=1&query={0}", query);
+            if (sortBy != null) {
+                redirect += MessageFormat.format("&sortBy={0}", sortBy);
+            }
+            if (order != null) {
+                redirect += MessageFormat.format("&order={0}", order);
+            }
+            return redirect;
         }
+        int requestedPageInDb = page - 1;
         if (sortBy != null && sortBy.equals("latest")) {
-            products = productsService.getProductsByQueryWithSort(query, Sort.by("listedOn").descending(), page);
+            products = productsService.getProductsByQueryWithSort(query, Sort.by("listedOn").descending(),
+                    requestedPageInDb);
         } else if (sortBy != null && sortBy.equals("price")) {
             if (order != null && order.equals("desc")) {
-                products = productsService.getProductsByQueryWithSort(query, Sort.by("price").descending(), page);
+                products = productsService.getProductsByQueryWithSort(query, Sort.by("price").descending(),
+                        requestedPageInDb);
             } else {
-                products = productsService.getProductsByQueryWithSort(query, Sort.by("price").ascending(), page);
+                products = productsService.getProductsByQueryWithSort(query, Sort.by("price").ascending(),
+                        requestedPageInDb);
             }
         } else {
-            products = productsService.getProductsByQuery(query, page);
+            products = productsService.getProductsByQuery(query, requestedPageInDb);
         }
 
         List<CategoryDto> categories = categoryService.getAllCategories();
@@ -196,10 +216,13 @@ public class ProductsController {
     public String getProductsByCategory(@PathVariable("categoryId") Integer categoryId,
             @RequestParam(name = "page", required = false) Integer page, Model model) {
         Slice<ProductDto> products = null;
-        if (page == null) {
-            page = 0;
+        if (page == null || page <= 0) {
+            String redirect = MessageFormat.format("redirect:/products/categories/{0}?page=1", categoryId);
+            return redirect;
         }
-        products = productsService.getProductsByCategoryId(categoryId, page);
+        int requestedPageInDb = page - 1;
+
+        products = productsService.getProductsByCategoryId(categoryId, requestedPageInDb);
         List<CategoryDto> categories = categoryService.getAllCategories();
         model.addAttribute("availableCategories", categories);
         model.addAttribute("selectedCategory", categoryId);
