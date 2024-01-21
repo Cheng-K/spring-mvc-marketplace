@@ -147,9 +147,42 @@
                 </div>
               </div>
             </div>
-            <div th:if="${#lists.isEmpty(products)}">
+            <div th:if="${!products.hasContent()}">
               <p>No products found</p>
             </div>
+          </div>
+          <div class="row" th:if="${products.hasContent()}">
+            <ul class="pagination justify-content-end">
+              <li
+                class="page-item"
+                th:classappend="${products.hasPrevious() ? '' : 'disabled'}"
+              >
+                <button
+                  class="page-link"
+                  aria-label="Previous"
+                  onclick="redirectToPrevPage()"
+                >
+                  <span aria-hidden="true"><</span>
+                </button>
+              </li>
+              <li class="page-item">
+                <div class="page-link" th:text="${products.getNumber() + 1}">
+                  1
+                </div>
+              </li>
+              <li
+                class="page-item"
+                th:classappend="${products.hasNext() ? '' : 'disabled'}"
+              >
+                <button
+                  class="page-link"
+                  aria-label="Next"
+                  onclick="redirectToNextPage()"
+                >
+                  <span aria-hidden="true">></span>
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -158,6 +191,18 @@
   <div layout:fragment="scripts">
     <script type="text/javascript" th:src="@{/js/products-list.js}"></script>
     <script th:inline="javascript">
+      function redirectToNextPage() {
+        let currentPage = [[${products.getNumber()}]] + 1;
+        let currentURL = new URL(window.location.href);
+        currentURL.searchParams.set("page", currentPage + 1);
+        window.location.assign(currentURL);
+      }
+      function redirectToPrevPage() {
+        let currentPage = [[${products.getNumber()}]] + 1;
+        let currentURL = new URL(window.location.href);
+        currentURL.searchParams.set("page", currentPage - 1);
+        window.location.assign(currentURL);
+      }
       const toast = document.querySelector(".toast");
       if (toast != null) {
         const bsToast = bootstrap.Toast.getOrCreateInstance(toast);
