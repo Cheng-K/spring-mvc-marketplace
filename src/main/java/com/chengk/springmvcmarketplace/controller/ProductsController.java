@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.chengk.springmvcmarketplace.domain.CategoryService;
 import com.chengk.springmvcmarketplace.domain.ProductsService;
 import com.chengk.springmvcmarketplace.domain.UserService;
+import com.chengk.springmvcmarketplace.domain.exceptions.AppResponseException;
 import com.chengk.springmvcmarketplace.model.dto.CategoryDto;
 import com.chengk.springmvcmarketplace.model.dto.HttpErrorDto;
 import com.chengk.springmvcmarketplace.model.dto.ProductDto;
@@ -115,8 +116,7 @@ public class ProductsController {
     public String getProductDetails(@PathVariable("productId") Integer productId, Model model) {
         ProductDto productDto = productsService.getProductById(productId);
         if (productDto == null) {
-            model.addAttribute("error", HttpErrorDto.createProductNotFoundError());
-            return "http-error";
+            throw new AppResponseException(HttpErrorDto.createProductNotFoundError());
         }
         model.addAttribute("product", productDto);
         return "products-detail";
@@ -127,9 +127,8 @@ public class ProductsController {
             RedirectAttributes redirectAttributes) {
         ProductDto productDto = productsService.getProductById(productId);
         if (!productDto.getSeller().getUsername().equals(principal.getName())) {
-            model.addAttribute("error", new HttpErrorDto(HttpStatus.UNAUTHORIZED, "Cannot delete product",
+            throw new AppResponseException(new HttpErrorDto(HttpStatus.UNAUTHORIZED, "Cannot delete product",
                     "Unexpected error encountered when deleting the product"));
-            return "http-error";
         }
 
         productsService.removeProduct(productId);
@@ -141,8 +140,7 @@ public class ProductsController {
     public String getEditProductForm(@PathVariable("productId") Integer productId, Model model) {
         ProductDto productDto = productsService.getProductById(productId);
         if (productDto == null) {
-            model.addAttribute("error", HttpErrorDto.createProductNotFoundError());
-            return "http-error";
+            throw new AppResponseException(HttpErrorDto.createProductNotFoundError());
         }
         model.addAttribute("product", productDto);
         List<CategoryDto> categories = categoryService.getAllCategories();
@@ -155,9 +153,8 @@ public class ProductsController {
             @ModelAttribute("product") @Valid ProductDto productDto, BindingResult bindingResult, Model model,
             Principal principal, RedirectAttributes redirectAttributes) {
         if (!productDto.getSeller().getUsername().equals(principal.getName())) {
-            model.addAttribute("error", new HttpErrorDto(HttpStatus.UNAUTHORIZED, "Cannot update product",
+            throw new AppResponseException(new HttpErrorDto(HttpStatus.UNAUTHORIZED, "Cannot update product",
                     "Unexpected error encountered when updating the product"));
-            return "http-error";
         }
         if (bindingResult.hasErrors()) {
             List<CategoryDto> categories = categoryService.getAllCategories();

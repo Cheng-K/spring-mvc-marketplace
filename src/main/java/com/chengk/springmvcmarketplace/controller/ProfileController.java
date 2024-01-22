@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.chengk.springmvcmarketplace.domain.UserService;
+import com.chengk.springmvcmarketplace.domain.exceptions.AppResponseException;
 import com.chengk.springmvcmarketplace.model.dto.HttpErrorDto;
 import com.chengk.springmvcmarketplace.model.dto.LoggedInUser;
 import com.chengk.springmvcmarketplace.model.dto.UserDto;
@@ -37,9 +38,8 @@ public class ProfileController {
     public String getProfile(@PathVariable("username") String username, Model model) {
         UserDto found = userService.getUserByUsername(username);
         if (found == null) {
-            model.addAttribute("error", new HttpErrorDto(HttpStatus.NOT_FOUND, "User Profile Not Found",
+            throw new AppResponseException(new HttpErrorDto(HttpStatus.NOT_FOUND, "User Profile Not Found",
                     MessageFormat.format("Unable to find user profile with username {0}", username)));
-            return "http-error";
         }
         UserDto editUser = new UserDto(found.getId(), found.getUsername(), found.getEmail(), found.getRoles(),
                 found.getProfilePicturePath());
