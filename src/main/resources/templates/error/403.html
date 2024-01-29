@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:th="http://www.thymeleaf.org"
+  layout:decorate="~{products-master-layout.html}"
+>
+  <head>
+    <title>Error</title>
+  </head>
+  <body>
+    <main layout:fragment="main">
+      <div
+        class="container d-flex align-items-center justify-content-center h-100"
+      >
+        <div class="row">
+          <div class="col-md-12">
+            <h1 class="text-center">Oops!</h1>
+            <h2 class="text-center">
+              It seems like you cannot view this page!
+            </h2>
+            <p class="text-center">Please proceed back to home</p>
+            <div class="d-grid gap-2 col-6 mx-auto">
+              <a th:href="@{/}" class="btn btn-primary">Go to Home</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

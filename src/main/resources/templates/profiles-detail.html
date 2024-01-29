@@ -80,6 +80,7 @@
                 <button
                   onclick="redirectToEditProfileURL()"
                   class="btn btn-primary"
+                  th:if="${#strings.equals(#authentication.name, user.username)}"
                 >
                   Edit profile
                 </button>

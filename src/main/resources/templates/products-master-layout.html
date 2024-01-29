@@ -86,6 +86,11 @@
               />
               <span class="fs-5" sec:authentication="name"></span>
             </a>
+            <form th:action="@{/logout}" method="post">
+              <button type="submit" class="btn btn-secondary-outline">
+                Logout
+              </button>
+            </form>
           </div>
         </div>
       </nav>
