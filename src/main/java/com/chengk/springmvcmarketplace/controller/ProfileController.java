@@ -1,5 +1,6 @@
 package com.chengk.springmvcmarketplace.controller;
 
+import java.security.Principal;
 import java.text.MessageFormat;
 
 import org.springframework.http.HttpStatus;
@@ -52,8 +53,13 @@ public class ProfileController {
     @PostMapping("/{userId}/edit")
     public String editProfile(@PathVariable("userId") Integer userId,
             @Valid @ModelAttribute("editUser") UserDto newUser,
-            BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+            BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes, Principal principal) {
         UserDto currentUser = userService.getUserById(userId);
+
+        if (!principal.getName().equals(currentUser.getUsername())) {
+            throw new AppResponseException(new HttpErrorDto(HttpStatus.FORBIDDEN, "Cannot update account",
+                    "You do not have the permission to update account that is not yours"));
+        }
 
         // check username changes
         if (!currentUser.getUsername().equals(newUser.getUsername())) {
