@@ -8,9 +8,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
-import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.chengk.springmvcmarketplace.domain.CategoryDtoFormatter;
@@ -56,10 +53,13 @@ public class WebConfig implements WebMvcConfigurer {
                             .hasAuthority("SUPER_USER")
                             .anyRequest().hasAnyAuthority("USER", "SUPER_USER");
                 })
+                .sessionManagement(sessionManagement -> {
+                    sessionManagement.invalidSessionUrl("/login?sessionExpired");
+                })
                 .userDetailsService(userDetailsService)
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/products"))
+                        .defaultSuccessUrl("/"))
                 .logout(logout -> logout.logoutSuccessUrl("/login"))
                 .build();
     }
