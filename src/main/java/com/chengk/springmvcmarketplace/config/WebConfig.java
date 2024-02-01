@@ -1,8 +1,13 @@
 package com.chengk.springmvcmarketplace.config;
 
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -12,6 +17,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.chengk.springmvcmarketplace.domain.CategoryDtoFormatter;
 import com.chengk.springmvcmarketplace.domain.UserDtoFormatter;
+import com.chengk.springmvcmarketplace.domain.exceptions.AppResponseException;
+import com.chengk.springmvcmarketplace.model.dto.HttpErrorDto;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -47,7 +54,8 @@ public class WebConfig implements WebMvcConfigurer {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests((security) -> {
-                    security.requestMatchers("/login", "/register", "/styles/**", "/js/**", "/images/**")
+                    security.requestMatchers("/login", "/register", "/styles/**", "/js/**", "/images/**",
+                            "/reset-password")
                             .permitAll()
                             .requestMatchers("/categories")
                             .hasAuthority("SUPER_USER")
@@ -62,5 +70,18 @@ public class WebConfig implements WebMvcConfigurer {
                         .defaultSuccessUrl("/"))
                 .logout(logout -> logout.logoutSuccessUrl("/login"))
                 .build();
+    }
+
+    @Bean
+    public KeyPair rsaKeyPair() {
+        KeyPairGenerator keypairGenerator;
+        try {
+            keypairGenerator = KeyPairGenerator.getInstance("rsa");
+            keypairGenerator.initialize(2048);
+            return keypairGenerator.generateKeyPair();
+        } catch (NoSuchAlgorithmException e) {
+            throw new AppResponseException(new HttpErrorDto(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "An unexpected error occurred.", "Please try again or contact support."));
+        }
     }
 }
