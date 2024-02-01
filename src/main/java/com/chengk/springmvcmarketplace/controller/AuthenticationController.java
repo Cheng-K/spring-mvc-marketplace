@@ -1,18 +1,24 @@
 
 package com.chengk.springmvcmarketplace.controller;
 
+import java.text.MessageFormat;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.chengk.springmvcmarketplace.domain.EmailService;
 import com.chengk.springmvcmarketplace.domain.RoleService;
+import com.chengk.springmvcmarketplace.domain.TokenService;
 import com.chengk.springmvcmarketplace.domain.UserService;
 import com.chengk.springmvcmarketplace.model.dto.RoleDto;
 import com.chengk.springmvcmarketplace.model.dto.UserDto;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @Controller
@@ -20,10 +26,15 @@ public class AuthenticationController {
 
     private UserService userService;
     private RoleService roleService;
+    private TokenService tokenService;
+    private EmailService emailService;
 
-    public AuthenticationController(UserService userService, RoleService roleService) {
+    public AuthenticationController(UserService userService, RoleService roleService, TokenService tokenService,
+            EmailService emailService) {
         this.userService = userService;
         this.roleService = roleService;
+        this.tokenService = tokenService;
+        this.emailService = emailService;
     }
 
     @GetMapping("/login")
@@ -65,6 +76,37 @@ public class AuthenticationController {
         userDto.getRoles().add(userRole);
         userService.addNewUser(userDto);
         return "register-successful";
+    }
+
+    @GetMapping("/reset-password")
+    public String testGetToken(Model model) {
+        model.addAttribute("resetUser", new UserDto());
+        return "reset-password";
+    }
+
+    @PostMapping("/reset-password")
+    public String postMethodName(@ModelAttribute("resetUser") @Valid UserDto resetUser, BindingResult bindingResult,
+            HttpServletRequest request) {
+        if (bindingResult.hasFieldErrors()) {
+            return "reset-password";
+        }
+
+        UserDto user = userService.getUserByUsernameAndEmail(resetUser.getUsername(), resetUser.getEmail());
+        if (user == null) {
+            bindingResult.rejectValue("username", "username.not.found",
+                    "User not found");
+            bindingResult.rejectValue("email", "email.not.found", "User not found");
+        }
+
+        if (bindingResult.hasFieldErrors()) {
+            return "reset-password";
+        }
+
+        String token = tokenService.generateTokenForUser(user.getId().toString());
+        String url = ServletUriComponentsBuilder.fromCurrentRequest().replacePath("/change-password")
+                .replaceQuery(MessageFormat.format("token={0}", token)).toUriString();
+        emailService.send("noreply@marketplace.com", "randomguy@mail.com", "Password reset", "URL: " + url);
+        return "reset-password-successful";
     }
 
 }
