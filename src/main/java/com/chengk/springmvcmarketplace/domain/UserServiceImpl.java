@@ -15,12 +15,14 @@ public class UserServiceImpl implements UserService {
     private UsersRepository usersRepository;
     private StorageService storageService;
     private DtoConverter<Users, UserDto> userDtoConverter;
+    private TokenService tokenService;
 
     public UserServiceImpl(UsersRepository usersRepository, StorageService storageService,
-            DtoConverter<Users, UserDto> userDtoConverter) {
+            DtoConverter<Users, UserDto> userDtoConverter, TokenService tokenService) {
         this.usersRepository = usersRepository;
         this.storageService = storageService;
         this.userDtoConverter = userDtoConverter;
+        this.tokenService = tokenService;
     }
 
     @Override
@@ -92,6 +94,19 @@ public class UserServiceImpl implements UserService {
         }
 
         usersRepository.save(editedUser);
+    }
+
+    @Override
+    public String getResetPasswordToken(UserDto resetUser) {
+        return tokenService.generateTokenForUser(resetUser.getId().toString());
+    }
+
+    @Override
+    public UserDto getUserByUsernameAndEmail(String username, String email) {
+        Optional<Users> user = usersRepository.findByUsernameAndEmail(username, email);
+        if (user.isEmpty())
+            return null;
+        return userDtoConverter.convertToDto(user.get());
     }
 
 }

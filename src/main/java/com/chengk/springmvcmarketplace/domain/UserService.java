@@ -14,4 +14,8 @@ public interface UserService {
     boolean emailExists(String email);
 
     void editUser(UserDto userDto);
+
+    String getResetPasswordToken(UserDto userDto);
+
+    UserDto getUserByUsernameAndEmail(String username, String email);
 }
