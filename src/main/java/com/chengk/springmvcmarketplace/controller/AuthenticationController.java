@@ -9,12 +9,16 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import com.chengk.springmvcmarketplace.domain.EmailService;
 import com.chengk.springmvcmarketplace.domain.RoleService;
 import com.chengk.springmvcmarketplace.domain.TokenService;
 import com.chengk.springmvcmarketplace.domain.UserService;
+import com.chengk.springmvcmarketplace.model.dto.PasswordChangeDto;
 import com.chengk.springmvcmarketplace.model.dto.RoleDto;
 import com.chengk.springmvcmarketplace.model.dto.UserDto;
 
@@ -28,13 +32,15 @@ public class AuthenticationController {
     private RoleService roleService;
     private TokenService tokenService;
     private EmailService emailService;
+    private TemplateEngine templateEngine;
 
     public AuthenticationController(UserService userService, RoleService roleService, TokenService tokenService,
-            EmailService emailService) {
+            EmailService emailService, TemplateEngine templateEngine) {
         this.userService = userService;
         this.roleService = roleService;
         this.tokenService = tokenService;
         this.emailService = emailService;
+        this.templateEngine = templateEngine;
     }
 
     @GetMapping("/login")
@@ -79,13 +85,13 @@ public class AuthenticationController {
     }
 
     @GetMapping("/reset-password")
-    public String testGetToken(Model model) {
+    public String getResetPassword(Model model) {
         model.addAttribute("resetUser", new UserDto());
         return "reset-password";
     }
 
     @PostMapping("/reset-password")
-    public String postMethodName(@ModelAttribute("resetUser") @Valid UserDto resetUser, BindingResult bindingResult,
+    public String postResetPassword(@ModelAttribute("resetUser") @Valid UserDto resetUser, BindingResult bindingResult,
             HttpServletRequest request) {
         if (bindingResult.hasFieldErrors()) {
             return "reset-password";
@@ -105,8 +111,26 @@ public class AuthenticationController {
         String token = tokenService.generateTokenForUser(user.getId().toString());
         String url = ServletUriComponentsBuilder.fromCurrentRequest().replacePath("/change-password")
                 .replaceQuery(MessageFormat.format("token={0}", token)).toUriString();
-        emailService.send("noreply@marketplace.com", "randomguy@mail.com", "Password reset", "URL: " + url);
+        Context context = new Context();
+        context.setVariable("password_reset_link", url);
+        String parsedEmailContent = templateEngine.process("reset-password-email", context);
+        emailService.send("noreply@marketplace.com", user.getEmail(), "Password Reset Request",
+                parsedEmailContent);
         return "reset-password-successful";
+    }
+
+    @GetMapping("/change-password")
+    public String getChangePassword(@RequestParam("token") String token, Model model) {
+        model.addAttribute("passwordChange", new PasswordChangeDto());
+        model.addAttribute("passwordChangePostURL", ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
+        return "change-password";
+    }
+
+    @PostMapping("/change-password")
+    public String postChangePassword(@RequestParam("token") String token, Model model) {
+        String claim = tokenService.verifyAndGetClaim(token, "uid");
+        System.out.println(claim);
+        return "redirect:/login";
     }
 
 }
