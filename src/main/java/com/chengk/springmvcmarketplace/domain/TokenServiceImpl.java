@@ -9,26 +9,37 @@ import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 
 @Service
 public class TokenServiceImpl implements TokenService {
-
-    private KeyPair secretKeyPair;
+    ;
+    private Algorithm algorithm;
 
     public TokenServiceImpl(KeyPair secretKeyPair) {
-        this.secretKeyPair = secretKeyPair;
+        this.algorithm = Algorithm.RSA256((RSAPublicKey) secretKeyPair.getPublic(),
+                (RSAPrivateKey) secretKeyPair.getPrivate());
     }
 
     @Override
     public String generateTokenForUser(String userId) {
-        Algorithm algorithm = Algorithm.RSA256((RSAPublicKey) secretKeyPair.getPublic(),
-                (RSAPrivateKey) secretKeyPair.getPrivate());
         String token = JWT.create()
                 .withClaim("uid", userId)
                 .withIssuer("marketplace-server")
                 .withExpiresAt(Instant.now().plusSeconds(15 * 60))
                 .sign(algorithm);
         return token;
+    }
+
+    @Override
+    public String verifyAndGetClaim(String token, String claim) throws JWTVerificationException {
+        DecodedJWT decoded = JWT.require(algorithm)
+                .withIssuer("marketplace-server")
+                .withClaimPresence(claim)
+                .build()
+                .verify(token);
+        return decoded.getClaim(claim).asString();
     }
 
 }
