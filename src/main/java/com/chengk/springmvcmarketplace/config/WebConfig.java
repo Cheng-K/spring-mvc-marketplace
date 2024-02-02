@@ -55,20 +55,24 @@ public class WebConfig implements WebMvcConfigurer {
         return http
                 .authorizeHttpRequests((security) -> {
                     security.requestMatchers("/login", "/register", "/styles/**", "/js/**", "/images/**",
-                            "/reset-password")
+                            "/reset-password", "/change-password", "/error")
                             .permitAll()
                             .requestMatchers("/categories")
                             .hasAuthority("SUPER_USER")
                             .anyRequest().hasAnyAuthority("USER", "SUPER_USER");
                 })
-                .sessionManagement(sessionManagement -> {
-                    sessionManagement.invalidSessionUrl("/login?sessionExpired");
-                })
                 .userDetailsService(userDetailsService)
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/"))
-                .logout(logout -> logout.logoutSuccessUrl("/login"))
+                .logout(logout -> {
+                    logout.logoutSuccessUrl("/login");
+                    logout.invalidateHttpSession(false);
+                    logout.deleteCookies("JSESSIONID");
+                })
+                .sessionManagement(sessionManagement -> {
+                    sessionManagement.invalidSessionUrl("/login?sessionExpired");
+                })
                 .build();
     }
 
