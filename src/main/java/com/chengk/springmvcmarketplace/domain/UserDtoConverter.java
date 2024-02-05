@@ -46,7 +46,7 @@ public class UserDtoConverter implements DtoConverter<Users, UserDto> {
         Set<RoleRef> roleRefs = element.getRoles().stream().map((role) -> new RoleRef(role.getId()))
                 .collect(Collectors.toSet());
         return new Users(element.getId(), element.getUsername(), element.getEmail(), password, roleRefs,
-                element.getProfilePicturePath());
+                element.getProfilePicturePath(), null);
     }
 
 }
