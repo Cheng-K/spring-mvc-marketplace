@@ -98,7 +98,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String getResetPasswordToken(UserDto resetUser) {
-        return tokenService.generateTokenForUser(resetUser.getId().toString());
+        String token = tokenService.generateTokenForUser(resetUser.getId().toString());
+        Users saveUser = usersRepository.findById(resetUser.getId()).get();
+        saveUser.setPasswordResetToken(token);
+        usersRepository.save(saveUser);
+        return token;
     }
 
     @Override
@@ -109,4 +113,14 @@ public class UserServiceImpl implements UserService {
         return userDtoConverter.convertToDto(user.get());
     }
 
+    @Override
+    public boolean verifyPasswordResetToken(Integer id, String token) {
+        Optional<Users> user = usersRepository.findById(id);
+        if (user.isPresent() && user.get().getPasswordResetToken().contentEquals(token)) {
+            user.get().setPasswordResetToken(null);
+            usersRepository.save(user.get());
+            return true;
+        }
+        return false;
+    }
 }

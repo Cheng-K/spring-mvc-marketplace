@@ -18,4 +18,6 @@ public interface UserService {
     String getResetPasswordToken(UserDto userDto);
 
     UserDto getUserByUsernameAndEmail(String username, String email);
+
+    boolean verifyPasswordResetToken(Integer id, String token);
 }
