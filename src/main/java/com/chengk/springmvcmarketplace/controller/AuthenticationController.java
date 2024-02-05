@@ -3,6 +3,7 @@ package com.chengk.springmvcmarketplace.controller;
 
 import java.text.MessageFormat;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,8 @@ import com.chengk.springmvcmarketplace.domain.EmailService;
 import com.chengk.springmvcmarketplace.domain.RoleService;
 import com.chengk.springmvcmarketplace.domain.TokenService;
 import com.chengk.springmvcmarketplace.domain.UserService;
+import com.chengk.springmvcmarketplace.domain.exceptions.AppResponseException;
+import com.chengk.springmvcmarketplace.model.dto.HttpErrorDto;
 import com.chengk.springmvcmarketplace.model.dto.PasswordChangeDto;
 import com.chengk.springmvcmarketplace.model.dto.RoleDto;
 import com.chengk.springmvcmarketplace.model.dto.UserDto;
@@ -108,7 +111,7 @@ public class AuthenticationController {
             return "reset-password";
         }
 
-        String token = tokenService.generateTokenForUser(user.getId().toString());
+        String token = userService.getResetPasswordToken(user);
         String url = ServletUriComponentsBuilder.fromCurrentRequest().replacePath("/change-password")
                 .replaceQuery(MessageFormat.format("token={0}", token)).toUriString();
         Context context = new Context();
@@ -127,10 +130,27 @@ public class AuthenticationController {
     }
 
     @PostMapping("/change-password")
-    public String postChangePassword(@RequestParam("token") String token, Model model) {
-        String claim = tokenService.verifyAndGetClaim(token, "uid");
-        System.out.println(claim);
-        return "redirect:/login";
+    public String postChangePassword(@RequestParam("token") String token,
+            @ModelAttribute("passwordChange") @Valid PasswordChangeDto passwordChangeDto, BindingResult bindingResult,
+            Model model) {
+
+        if (!bindingResult.hasErrors()
+                && !passwordChangeDto.getNewPassword().contentEquals(passwordChangeDto.getRepeatNewPassword())) {
+            bindingResult.rejectValue("repeatNewPassword", "password.not.match",
+                    "New password does not match the repeated password entered.");
+        }
+        if (bindingResult.hasErrors()) {
+            return "change-password";
+        }
+        String userId = tokenService.verifyAndGetClaim(token, "uid");
+        if (!userService.verifyPasswordResetToken(Integer.parseInt(userId), token)) {
+            throw new AppResponseException(new HttpErrorDto(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Unable to reset password", "Please request a new password reset link and try again."));
+        }
+        UserDto user = userService.getUserById(Integer.parseInt(userId));
+        user.setPassword(passwordChangeDto.getNewPassword());
+        userService.editUser(user);
+        return "change-password-successful";
     }
 
 }
