@@ -17,4 +17,11 @@ public interface ProductRepository
 
         Slice<Products> findByCategoryId(Integer categoryId, Pageable pageable);
 
+        Slice<Products> findBySellerId(Integer sellerId, Pageable pageable);
+
+        Slice<Products> findBySellerIdAndTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(Integer sellerId,
+                        String title,
+                        String description, Pageable pageable);
+
+        Slice<Products> findByCategoryIdAndSellerId(Integer categoryId, Integer sellerId, Pageable pageable);
 }

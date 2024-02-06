@@ -25,4 +25,14 @@ public interface ProductsService {
 
     Slice<ProductDto> getProductsByCategoryId(Integer categoryId, int pageNumber);
 
+    Slice<ProductDto> getAllUserProductsWithPagination(int pageNumber, int userId);
+
+    Slice<ProductDto> getAllUserProductsWithSort(Sort sort, int pageNumber, int userId);
+
+    Slice<ProductDto> getUserProductsByQuery(String query, int pageNumber, int userId);
+
+    Slice<ProductDto> getUserProductsByQueryWithSort(String query, Sort sort, int pageNumber, int userId);
+
+    Slice<ProductDto> getUserProductsByCategoryId(Integer categoryId, int pageNumber, int userId);
+
 }

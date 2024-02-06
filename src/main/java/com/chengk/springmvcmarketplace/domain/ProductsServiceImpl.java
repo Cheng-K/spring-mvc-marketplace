@@ -1,8 +1,6 @@
 package com.chengk.springmvcmarketplace.domain;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
@@ -125,6 +123,44 @@ public class ProductsServiceImpl implements ProductsService {
         Slice<Products> products = productRepository.findByTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(
                 query, query, pageRequest.withPage(pageNumber).withSort(sort));
         return products.map((product) -> productDtoConverter.convertToDto(product));
+    }
+
+    @Override
+    public Slice<ProductDto> getAllUserProductsWithPagination(int pageNumber, int userId) {
+        Slice<Products> products = productRepository.findBySellerId(userId, pageRequest.withPage(pageNumber));
+        return products.map((product) -> productDtoConverter.convertToDto(product));
+    }
+
+    @Override
+    public Slice<ProductDto> getAllUserProductsWithSort(Sort sort, int pageNumber, int userId) {
+        Slice<Products> products = productRepository.findBySellerId(userId,
+                pageRequest.withPage(pageNumber).withSort(sort));
+        return products.map((product) -> productDtoConverter.convertToDto(product));
+    }
+
+    @Override
+    public Slice<ProductDto> getUserProductsByCategoryId(Integer categoryId, int pageNumber, int userId) {
+        Slice<Products> products = productRepository.findByCategoryIdAndSellerId(categoryId, userId,
+                pageRequest.withPage(pageNumber));
+        return products.map((product) -> productDtoConverter.convertToDto(product));
+    }
+
+    @Override
+    public Slice<ProductDto> getUserProductsByQuery(String query, int pageNumber, int userId) {
+        Slice<Products> products = productRepository
+                .findBySellerIdAndTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(
+                        userId, query, query, pageRequest.withPage(pageNumber));
+        return products.map((product) -> productDtoConverter.convertToDto(product));
+
+    }
+
+    @Override
+    public Slice<ProductDto> getUserProductsByQueryWithSort(String query, Sort sort, int pageNumber, int userId) {
+        Slice<Products> products = productRepository
+                .findBySellerIdAndTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(
+                        userId, query, query, pageRequest.withPage(pageNumber).withSort(sort));
+        return products.map((product) -> productDtoConverter.convertToDto(product));
+
     }
 
 }
