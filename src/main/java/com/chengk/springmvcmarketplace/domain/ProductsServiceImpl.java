@@ -1,10 +1,12 @@
 package com.chengk.springmvcmarketplace.domain;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -147,18 +149,29 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Override
     public Slice<ProductDto> getUserProductsByQuery(String query, int pageNumber, int userId) {
-        Slice<Products> products = productRepository
+        Integer totalCount = productRepository
+                .getCountBySellerIdAndTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(userId, query, query);
+        List<Products> result = productRepository
                 .findBySellerIdAndTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(
                         userId, query, query, pageRequest.withPage(pageNumber));
+        int itemsCount = ((pageNumber) * pageRequest.getPageSize()) + result.size();
+        Slice<Products> products = new SliceImpl<>(result,
+                pageRequest.withPage(pageNumber), totalCount > itemsCount);
+        System.out.println(result);
         return products.map((product) -> productDtoConverter.convertToDto(product));
 
     }
 
     @Override
     public Slice<ProductDto> getUserProductsByQueryWithSort(String query, Sort sort, int pageNumber, int userId) {
-        Slice<Products> products = productRepository
+        Integer totalCount = productRepository
+                .getCountBySellerIdAndTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(userId, query, query);
+        List<Products> result = productRepository
                 .findBySellerIdAndTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(
                         userId, query, query, pageRequest.withPage(pageNumber).withSort(sort));
+        int itemsCount = ((pageNumber) * pageRequest.getPageSize()) + result.size();
+        Slice<Products> products = new SliceImpl<>(result,
+                pageRequest.withPage(pageNumber), totalCount > itemsCount);
         return products.map((product) -> productDtoConverter.convertToDto(product));
 
     }
