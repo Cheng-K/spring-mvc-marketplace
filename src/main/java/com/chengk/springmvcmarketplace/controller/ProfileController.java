@@ -2,7 +2,10 @@ package com.chengk.springmvcmarketplace.controller;
 
 import java.security.Principal;
 import java.text.MessageFormat;
+import java.util.List;
 
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,12 +18,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.chengk.springmvcmarketplace.domain.CategoryService;
+import com.chengk.springmvcmarketplace.domain.ProductsService;
 import com.chengk.springmvcmarketplace.domain.UserService;
 import com.chengk.springmvcmarketplace.domain.exceptions.AppResponseException;
+import com.chengk.springmvcmarketplace.model.dto.CategoryDto;
 import com.chengk.springmvcmarketplace.model.dto.HttpErrorDto;
 import com.chengk.springmvcmarketplace.model.dto.LoggedInUser;
+import com.chengk.springmvcmarketplace.model.dto.ProductDto;
 import com.chengk.springmvcmarketplace.model.dto.UserDto;
 
 import jakarta.validation.Valid;
@@ -30,9 +40,14 @@ import jakarta.validation.Valid;
 public class ProfileController {
 
     private UserService userService;
+    private ProductsService productsService;
+    private CategoryService categoryService;
 
-    public ProfileController(UserService userService) {
+    public ProfileController(UserService userService, ProductsService productsService,
+            CategoryService categoryService) {
         this.userService = userService;
+        this.productsService = productsService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/{username}")
@@ -110,6 +125,82 @@ public class ProfileController {
         SecurityContextHolder.getContext().setAuthentication(newAuth);
         redirectAttributes.addFlashAttribute("postRedirectMessage", "Profile updated successfully");
         return MessageFormat.format("redirect:/profiles/{0}", currentUser.getUsername());
+    }
+
+    @GetMapping("/{userId}/products")
+    public String getAllProducts(@RequestParam(name = "sortBy", required = false) String sortBy,
+            @RequestParam(name = "order", required = false) String order,
+            @RequestParam(name = "page", required = false) Integer page,
+            @PathVariable("userId") Integer userId,
+            Model model) {
+        Slice<ProductDto> products = null;
+        if (page == null || page <= 0) {
+            String redirect = MessageFormat.format("redirect:{0}",
+                    ServletUriComponentsBuilder.fromCurrentRequest().replaceQueryParam("page", 1).toUriString());
+            return redirect;
+        }
+        int requestedPageInDb = page - 1;
+        if (sortBy != null && sortBy.equals("latest")) {
+            products = productsService.getAllUserProductsWithSort(Sort.by("listedOn").descending(), requestedPageInDb,
+                    userId);
+        } else if (sortBy != null && sortBy.equals("price")) {
+            if (order != null && order.equals("desc")) {
+                products = productsService.getAllUserProductsWithSort(Sort.by("price").descending(), requestedPageInDb,
+                        userId);
+            } else {
+                products = productsService.getAllUserProductsWithSort(Sort.by("price").ascending(), requestedPageInDb,
+                        userId);
+            }
+        } else {
+            products = productsService.getAllUserProductsWithPagination(requestedPageInDb, userId);
+        }
+
+        model.addAttribute("products", products);
+        List<CategoryDto> categories = categoryService.getAllCategories();
+        model.addAttribute("availableCategories", categories);
+        model.addAttribute("linkPrefix", MessageFormat.format("/profiles/{0}/products", userId));
+        return "profiles-products-list";
+    }
+
+    @GetMapping("/{userId}/products/search")
+    public String searchProducts(@RequestParam("query") String query,
+            @RequestParam(name = "sortBy", required = false) String sortBy,
+            @RequestParam(name = "order", required = false) String order,
+            @RequestParam(name = "page", required = false) Integer page,
+            @PathVariable("userId") Integer userId,
+            Model model) {
+        if (query == null || query.isBlank()) {
+            return MessageFormat.format("redirect:{0}", MvcUriComponentsBuilder
+                    .fromMethodName(this.getClass(), "getAllProducts", sortBy, order, 1, userId, model)
+                    .build().toUriString());
+        }
+        Slice<ProductDto> products = null;
+        if (page == null || page <= 0) {
+            String redirect = MessageFormat.format("redirect:{0}",
+                    ServletUriComponentsBuilder.fromCurrentRequest().replaceQueryParam("page", 1).toUriString());
+            return redirect;
+        }
+        int requestedPageInDb = page - 1;
+        if (sortBy != null && sortBy.equals("latest")) {
+            products = productsService.getUserProductsByQueryWithSort(query, Sort.by("listedOn").descending(),
+                    requestedPageInDb, userId);
+        } else if (sortBy != null && sortBy.equals("price")) {
+            if (order != null && order.equals("desc")) {
+                products = productsService.getUserProductsByQueryWithSort(query, Sort.by("price").descending(),
+                        requestedPageInDb, userId);
+            } else {
+                products = productsService.getUserProductsByQueryWithSort(query, Sort.by("price").ascending(),
+                        requestedPageInDb, userId);
+            }
+        } else {
+            products = productsService.getUserProductsByQuery(query, requestedPageInDb, userId);
+        }
+
+        List<CategoryDto> categories = categoryService.getAllCategories();
+        model.addAttribute("availableCategories", categories);
+        model.addAttribute("products", products);
+        model.addAttribute("linkPrefix", MessageFormat.format("/profiles/{0}/products", userId));
+        return "profiles-products-list";
     }
 
 }
