@@ -4,3 +4,8 @@
   margin-right: 10px;
   background-color: var(--bs-gray-500);
 }
+
+.carousel-page-circle {
+  width: 0.8rem;
+  height: 0.8rem;
+}

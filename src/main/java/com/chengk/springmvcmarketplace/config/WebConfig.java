@@ -55,6 +55,7 @@ public class WebConfig implements WebMvcConfigurer {
         return http
                 .authorizeHttpRequests((security) -> {
                     security.requestMatchers("/login", "/register", "/styles/**", "/js/**", "/images/**",
+                            "/staticImages/**",
                             "/reset-password", "/change-password", "/error")
                             .permitAll()
                             .requestMatchers("/categories")
