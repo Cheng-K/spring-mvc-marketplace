@@ -15,7 +15,8 @@
       class="d-flex justify-content-center container"
     >
       <form class="form-container" th:action="@{/login}" th:method="post">
-        <h2 class="text-center">Login</h2>
+        <h2 class="display-4 fw-bold mb-3">Welcome Back</h2>
+        <h5 class="mb-4">Please login to continue</h5>
         <div th:if="${param.error}" class="bg-danger text-center text-light py-2 my-3 rounded fw-semibold">    
           Invalid username and password. Please try again.
         </div>
@@ -44,7 +45,7 @@
         </div>
         <button type="submit" class="btn btn-primary mb-3">Login</button>
         <div>
-          <span>New here?  </apan><a th:href="@{/register}">Register here</a>
+          <span>New here?  </span><a th:href="@{/register}">Register here</a>
         </div>
         <div class="mt-2">
           <span>Forgot password?  </apan><a th:href="@{/reset-password}">Reset here</a>
