@@ -5,3 +5,8 @@
   margin-right: 10px;
   object-fit: cover;
 }
+
+.dropdown-menu[data-bs-popper] {
+  left: auto;
+  right: 0;
+}

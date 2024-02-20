@@ -30,27 +30,7 @@
         </div>
       </div>
       <div class="container-fluid d-flex">
-        <div class="container-fluid px-5">
-          <div class="row mb-4">
-            <form
-              class="d-flex"
-              role="search"
-              th:action="@{/products/search}"
-              th:method="get"
-            >
-              <input
-                class="form-control me-2"
-                type="search"
-                name="query"
-                placeholder="Search"
-                aria-label="Search"
-                th:value="${param.query != null ? param.query : ''}"
-              />
-              <button class="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </form>
-          </div>
+        <div class="container-fluid px-5 pt-3">
           <div class="row mb-4">
             <div class="col">
               <span class="me-2">Sort by: </span>
@@ -165,7 +145,7 @@
             </ul>
           </div>
         </div>
-        <div class="category-list">
+        <div class="category-list pt-3">
           <div class="d-flex mb-2 justify-content-between">
             <h4>Categories</h4>
             <a

@@ -119,7 +119,7 @@ public class ProfileController {
 
         // dynamically update logged in user details
         LoggedInUser loggedInCurrent = new LoggedInUser(currentUser.getUsername(), "",
-                currentUser.getGrantedAuthorities(), currentUser.getProfilePicturePath());
+                currentUser.getGrantedAuthorities(), currentUser.getProfilePicturePath(), currentUser.getId());
         Authentication newAuth = new UsernamePasswordAuthenticationToken(loggedInCurrent,
                 currentUser.getPassword(), currentUser.getGrantedAuthorities());
         SecurityContextHolder.getContext().setAuthentication(newAuth);
