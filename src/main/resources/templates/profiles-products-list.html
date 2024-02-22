@@ -30,26 +30,6 @@
         </div>
       </div>
       <div class="container-fluid d-flex">
-        <div class="w-25">
-          <div class="d-flex mb-2 justify-content-between">
-            <h4>Categories</h4>
-            <a
-              class="btn btn-secondary"
-              th:href="@{${linkPrefix} + '/'}"
-              th:if="${selectedCategory != null}"
-              >Clear selection</a
-            >
-          </div>
-          <ul class="list-group">
-            <li
-              class="list-group-item list-group-item-action category-list-item"
-              th:each="category : ${availableCategories}"
-              th:text="${category.title}"
-              th:data-category-id="${category.id}"
-              th:classappend="${category.id == selectedCategory} ? 'active' : '' "
-            ></li>
-          </ul>
-        </div>
         <div class="container-fluid px-5">
           <div class="row mb-4">
             <form
@@ -184,6 +164,26 @@
               </li>
             </ul>
           </div>
+        </div>
+        <div class="w-25">
+          <div class="d-flex mb-2 justify-content-between">
+            <h4>Categories</h4>
+            <a
+              class="btn btn-secondary"
+              th:href="@{${linkPrefix} + '/'}"
+              th:if="${selectedCategory != null}"
+              >Clear selection</a
+            >
+          </div>
+          <ul class="list-group">
+            <li
+              class="list-group-item list-group-item-action category-list-item"
+              th:each="category : ${availableCategories}"
+              th:text="${category.title}"
+              th:data-category-id="${category.id}"
+              th:classappend="${category.id == selectedCategory} ? 'active' : '' "
+            ></li>
+          </ul>
         </div>
       </div>
     </main>

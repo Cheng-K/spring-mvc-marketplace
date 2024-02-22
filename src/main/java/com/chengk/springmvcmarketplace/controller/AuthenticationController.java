@@ -48,13 +48,13 @@ public class AuthenticationController {
 
     @GetMapping("/login")
     public String getLoginForm() {
-        return "login";
+        return "auth/login";
     }
 
     @GetMapping("/register")
     public String getRegistrationForm(Model model) {
         model.addAttribute("newUser", new UserDto());
-        return "register";
+        return "auth/register";
     }
 
     @PostMapping("/register")
@@ -76,7 +76,7 @@ public class AuthenticationController {
             bindingResult.rejectValue("password", "password.long", "Password must not exceed 14 characters");
         }
         if (bindingResult.hasErrors()) {
-            return "register";
+            return "auth/register";
         }
         RoleDto userRole = roleService.getRoleByName("USER");
         if (userRole == null) {
@@ -84,20 +84,20 @@ public class AuthenticationController {
         }
         userDto.getRoles().add(userRole);
         userService.addNewUser(userDto);
-        return "register-successful";
+        return "auth/register-successful";
     }
 
     @GetMapping("/reset-password")
     public String getResetPassword(Model model) {
         model.addAttribute("resetUser", new UserDto());
-        return "reset-password";
+        return "auth/reset-password";
     }
 
     @PostMapping("/reset-password")
     public String postResetPassword(@ModelAttribute("resetUser") @Valid UserDto resetUser, BindingResult bindingResult,
             HttpServletRequest request) {
         if (bindingResult.hasFieldErrors()) {
-            return "reset-password";
+            return "auth/reset-password";
         }
 
         UserDto user = userService.getUserByUsernameAndEmail(resetUser.getUsername(), resetUser.getEmail());
@@ -108,7 +108,7 @@ public class AuthenticationController {
         }
 
         if (bindingResult.hasFieldErrors()) {
-            return "reset-password";
+            return "auth/reset-password";
         }
 
         String token = userService.getResetPasswordToken(user);
@@ -119,14 +119,14 @@ public class AuthenticationController {
         String parsedEmailContent = templateEngine.process("reset-password-email", context);
         emailService.send("noreply@marketplace.com", user.getEmail(), "Password Reset Request",
                 parsedEmailContent);
-        return "reset-password-successful";
+        return "auth/reset-password-successful";
     }
 
     @GetMapping("/change-password")
     public String getChangePassword(@RequestParam("token") String token, Model model) {
         model.addAttribute("passwordChange", new PasswordChangeDto());
         model.addAttribute("passwordChangePostURL", ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
-        return "change-password";
+        return "auth/change-password";
     }
 
     @PostMapping("/change-password")
@@ -140,7 +140,7 @@ public class AuthenticationController {
                     "New password does not match the repeated password entered.");
         }
         if (bindingResult.hasErrors()) {
-            return "change-password";
+            return "auth/change-password";
         }
         String userId = tokenService.verifyAndGetClaim(token, "uid");
         if (!userService.verifyPasswordResetToken(Integer.parseInt(userId), token)) {
@@ -150,7 +150,7 @@ public class AuthenticationController {
         UserDto user = userService.getUserById(Integer.parseInt(userId));
         user.setPassword(passwordChangeDto.getNewPassword());
         userService.editUser(user);
-        return "change-password-successful";
+        return "auth/change-password-successful";
     }
 
 }

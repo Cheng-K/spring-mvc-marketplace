@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:th="http://www.thymeleaf.org"
+  layout:decorate="~{auth/master-layout.html}"
+>
+  <body>
+    <main
+      class="container-fluid d-flex justify-content-center"
+      layout:fragment="form-container"
+    >
+      <div
+        class="container-fluid d-flex flex-column align-items-center"
+        layout:fragment="feedback-content"
+      ></div>
+    </main>
+  </body>
+</html>
