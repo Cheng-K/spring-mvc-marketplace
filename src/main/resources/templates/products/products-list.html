@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:th="http://www.thymeleaf.org"
+  layout:decorate="~{products/products-master-layout}"
+>
+  <head>
+    <title>Products</title>
+    <link rel="stylesheet" th:href="@{/styles/products-list.css}" />
+  </head>
+  <body>
+    <main layout:fragment="main" th:classappend="position-relative">
+      <div
+        class="top-0 start-50 translate-middle-x position-absolute"
+        layout:insert="~{components/toast :: toast(postRedirectMessage=${postRedirectMessage})}"
+      ></div>
+      <div class="container-fluid d-flex">
+        <div class="container-fluid px-5 pt-3">
+          <div class="row mb-4">
+            <div
+              class="col"
+              layout:insert="~{components/products-sortby :: productsSortBy()}"
+            ></div>
+          </div>
+          <div
+            class="row"
+            layout:insert="~{components/products-gallery :: productGallery(products=${products})}"
+          ></div>
+          <div
+            class="row"
+            th:if="${products.hasContent()}"
+            layout:insert="~{components/pagination :: pagination(products=${products})}"
+          ></div>
+        </div>
+        <div
+          class="category-list pt-3"
+          layout:insert="~{components/category-list :: categoryList('/products', ${availableCategories}, ${selectedCategory})}"
+        ></div>
+      </div>
+    </main>
+  </body>
+  <div layout:fragment="scripts">
+    <script type="text/javascript" th:src="@{/js/products-list.js}"></script>
+    <script
+      th:inline="javascript"
+      layout:replace="~{components/pagination :: paginationScripts()}"
+    ></script>
+    <script
+      th:inline="javascript"
+      layout:replace="~{components/toast :: toastScripts()}"
+    ></script>
+    <script
+      th:inline="javascript"
+      layout:replace="~{components/products-sortby :: productsSortByScripts()}"
+    ></script>
+  </div>
+</html>

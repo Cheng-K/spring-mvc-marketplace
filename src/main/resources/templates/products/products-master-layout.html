@@ -3,7 +3,7 @@
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
   xmlns:th="http://www.thymeleaf.org"
   xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-  layout:decorate="~{master-layout.html}"
+  layout:decorate="~{master-layout}"
 >
   <head>
     <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">
@@ -30,24 +30,10 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <form
-              class="d-flex flex-grow-1 mx-5"
-              role="search"
-              th:action="@{/products/search}"
-              th:method="get"
-            >
-              <input
-                class="form-control me-2"
-                type="search"
-                name="query"
-                placeholder="Search marketplace"
-                aria-label="Search marketplace"
-                th:value="${param.query != null ? param.query : ''}"
-              />
-              <button class="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </form>
+            <div
+              layout:insert="~{components/search :: search(link='/products/search')}"
+              class="flex-grow-1 mx-5"
+            ></div>
             <ul class="navbar-nav me-4 mb-2 mb-lg-0">
               <li class="nav-item">
                 <a class="btn btn-danger fw-semibold" href="/products/add"

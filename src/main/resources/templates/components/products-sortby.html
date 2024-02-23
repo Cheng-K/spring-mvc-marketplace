@@ -1,0 +1,40 @@
+<div layout:fragment="productsSortBy()">
+  <span class="me-2">Sort by: </span>
+  <button
+    class="btn me-2"
+    th:classappend="${#strings.equals(param.sortBy, 'latest') ? 'btn-primary' : 'btn-secondary'}"
+    onclick="sortProductsByLatest()"
+  >
+    Latest
+  </button>
+  <button
+    class="btn me-2"
+    th:classappend="${#strings.equals(param.sortBy, 'price') && #strings.equals(param.order, 'asc') ? 'btn-primary' : 'btn-secondary'}"
+    onclick="sortProductsByPrice('asc')"
+  >
+    Price (Low to High)
+  </button>
+  <button
+    class="btn"
+    th:classappend="${#strings.equals(param.sortBy, 'price') && #strings.equals(param.order, 'desc') ? 'btn-primary' : 'btn-secondary'}"
+    onclick="sortProductsByPrice('desc')"
+  >
+    Price (High to Low)
+  </button>
+</div>
+
+<script th:inline="javascript" layout:fragment="productsSortByScripts()">
+  function sortProductsByLatest() {
+    const currentURL = new URL(window.location.href);
+    currentURL.searchParams.set("sortBy", "latest");
+    currentURL.searchParams.delete("order");
+    window.location.href = currentURL.toString();
+  }
+
+  function sortProductsByPrice(order) {
+    const currentURL = new URL(window.location.href);
+    currentURL.searchParams.set("sortBy", "price");
+    currentURL.searchParams.set("order", order);
+    window.location.href = currentURL.toString();
+  }
+</script>

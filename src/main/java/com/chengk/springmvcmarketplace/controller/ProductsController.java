@@ -80,7 +80,7 @@ public class ProductsController {
         model.addAttribute("products", products);
         List<CategoryDto> categories = categoryService.getAllCategories();
         model.addAttribute("availableCategories", categories);
-        return "products-list";
+        return "products/products-list";
     }
 
     @GetMapping("/add")
@@ -90,7 +90,7 @@ public class ProductsController {
         List<CategoryDto> categories = categoryService.getAllCategories();
         model.addAttribute("availableCategories", categories);
         model.addAttribute("newProduct", newProduct);
-        return "products-add";
+        return "products/products-add";
     }
 
     @PostMapping("/add")
@@ -102,14 +102,14 @@ public class ProductsController {
         if (result.hasErrors()) {
             List<CategoryDto> categories = categoryService.getAllCategories();
             model.addAttribute("availableCategories", categories);
-            return "products-add";
+            return "products/products-add";
         }
         UserDto seller = userService.getUserByUsername(principal.getName());
         productDto.setListedOn(LocalDateTime.now());
         productDto.setSeller(seller);
         productsService.addNewProduct(productDto);
         redirectAttributes.addFlashAttribute("postRedirectMessage", "Product added successfully");
-        return "redirect:/products";
+        return "redirect:/products?page=1";
     }
 
     @GetMapping("/{productId}")
@@ -119,7 +119,7 @@ public class ProductsController {
             throw new AppResponseException(HttpErrorDto.createProductNotFoundError());
         }
         model.addAttribute("product", productDto);
-        return "products-detail";
+        return "products/products-detail";
     }
 
     @DeleteMapping("/{productId}")
@@ -145,7 +145,7 @@ public class ProductsController {
         model.addAttribute("product", productDto);
         List<CategoryDto> categories = categoryService.getAllCategories();
         model.addAttribute("availableCategories", categories);
-        return "products-edit";
+        return "products/products-edit";
     }
 
     @PutMapping("/{productId}")
@@ -159,7 +159,7 @@ public class ProductsController {
         if (bindingResult.hasErrors()) {
             List<CategoryDto> categories = categoryService.getAllCategories();
             model.addAttribute("availableCategories", categories);
-            return "products-edit";
+            return "products/products-edit";
         }
         productDto.setId(productId);
         productsService.editProduct(productDto);
@@ -206,7 +206,7 @@ public class ProductsController {
         List<CategoryDto> categories = categoryService.getAllCategories();
         model.addAttribute("availableCategories", categories);
         model.addAttribute("products", products);
-        return "products-list";
+        return "products/products-list";
     }
 
     @GetMapping("/categories/{categoryId}")
@@ -224,7 +224,7 @@ public class ProductsController {
         model.addAttribute("availableCategories", categories);
         model.addAttribute("selectedCategory", categoryId);
         model.addAttribute("products", products);
-        return "products-list";
+        return "products/products-list";
     }
 
 }

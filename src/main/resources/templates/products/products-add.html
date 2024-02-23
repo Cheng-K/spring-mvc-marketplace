@@ -3,27 +3,31 @@
   lang="en"
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
   xmlns:th="http://www.thymeleaf.org"
-  layout:decorate="~{products-master-layout.html}"
+  layout:decorate="~{products/products-master-layout.html}"
 >
   <head>
-    <title>Edit Product</title>
+    <title>Add Product</title>
     <link rel="stylesheet" th:href="@{/styles/products-add.css}" />
   </head>
   <body>
     <main layout:fragment="main">
       <div class="container mt-5">
-        <h1>Edit Product</h1>
+        <h1>Add New Product</h1>
         <form
-          th:method="put"
-          th:action="@{/products/{id}(id = ${product.id})}"
+          method="post"
+          th:action="@{/products/add}"
           enctype="multipart/form-data"
-          th:object="${product}"
+          th:object="${newProduct}"
         >
           <div class="mb-3">
             <label for="image" class="form-label d-block">Product Image*</label>
-            <img th:src=@{/images/products/{imageFile}(imageFile=*{image})}
-            alt="Product Image" class="mb-3 product-preview-img"
-            id="previewImage"/>
+            <img
+              id="previewImage"
+              src=""
+              th:src="@{/images/products/{imageFile}(imageFile=*{image})}"
+              alt="No image selected"
+              class="mb-3 product-preview-img"
+            />
             <input
               type="file"
               class="form-control"
@@ -37,12 +41,6 @@
               th:errors="*{imageFile}"
               class="invalid-feedback"
             ></p>
-            <input
-              type="hidden"
-              class="form-control"
-              th:field="*{image}"
-              readonly
-            />
           </div>
           <div class="mb-3">
             <label for="title" class="form-label">Product Title*</label>
@@ -142,50 +140,7 @@
               class="invalid-feedback"
             ></p>
           </div>
-          <div class="mb-3">
-            <label for="listedOn" class="form-label">Listed On</label>
-            <input
-              type="datetime-local"
-              class="form-control"
-              th:field="*{listedOn}"
-              readonly
-            />
-          </div>
-          <div class="mb-3">
-            <label for="seller" class="form-label">Seller</label>
-            <div
-              class="d-flex align-items-center text-decoration-none text-reset mb-4"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="28"
-                height="28"
-                fill="currentColor"
-                class="bi bi-person-circle me-2"
-                viewBox="0 0 16 16"
-                th:if="${product.seller.profilePicturePath == null}"
-              >
-                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                <path
-                  fill-rule="evenodd"
-                  d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
-                />
-              </svg>
-              <img
-                th:src="@{/images/profiles/{imageFile} (imageFile = ${product.seller.profilePicturePath})}"
-                class="seller-img"
-                th:if="${product.seller.profilePicturePath != null}"
-              />
-              <span class="fs-5" th:text="*{seller.username}"></span>
-            </div>
-            <input
-              type="hidden"
-              class="form-control"
-              th:field="*{seller}"
-              readonly
-            />
-          </div>
-          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="submit" class="btn btn-primary">Add Product</button>
           <a class="btn btn-danger" th:href="@{/products}">Discard</a>
         </form>
       </div>

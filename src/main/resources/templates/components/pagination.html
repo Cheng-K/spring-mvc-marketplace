@@ -1,0 +1,43 @@
+<ul
+  class="pagination justify-content-end"
+  layout:fragment="pagination(products)"
+>
+  <li
+    class="page-item"
+    th:classappend="${products.hasPrevious() ? '' : 'disabled'}"
+  >
+    <button
+      class="page-link"
+      aria-label="Previous"
+      onclick="redirectToPrevPage()"
+    >
+      <span aria-hidden="true"><</span>
+    </button>
+  </li>
+  <li class="page-item">
+    <div class="page-link" th:text="${products.getNumber() + 1}">1</div>
+  </li>
+  <li
+    class="page-item"
+    th:classappend="${products.hasNext() ? '' : 'disabled'}"
+  >
+    <button class="page-link" aria-label="Next" onclick="redirectToNextPage()">
+      <span aria-hidden="true">></span>
+    </button>
+  </li>
+</ul>
+
+<script th:inline="javascript" layout:fragment="paginationScripts()">
+  function redirectToNextPage() {
+    let currentPage = [[${products.getNumber()}]] + 1;
+    let currentURL = new URL(window.location.href);
+    currentURL.searchParams.set("page", currentPage + 1);
+    window.location.assign(currentURL);
+  }
+  function redirectToPrevPage() {
+    let currentPage = [[${products.getNumber()}]] + 1;
+    let currentURL = new URL(window.location.href);
+    currentURL.searchParams.set("page", currentPage - 1);
+    window.location.assign(currentURL);
+  }
+</script>
