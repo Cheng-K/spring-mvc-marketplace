@@ -1,26 +1,74 @@
 <div layout:fragment="productsSortBy()">
   <span class="me-2">Sort by: </span>
-  <button
-    class="btn me-2"
-    th:classappend="${#strings.equals(param.sortBy, 'latest') ? 'btn-primary' : 'btn-secondary'}"
-    onclick="sortProductsByLatest()"
+  <select
+    id="sortBySelect"
+    class="form-select d-inline-block d-lg-none"
+    aria-label="Default select example"
   >
-    Latest
-  </button>
-  <button
-    class="btn me-2"
-    th:classappend="${#strings.equals(param.sortBy, 'price') && #strings.equals(param.order, 'asc') ? 'btn-primary' : 'btn-secondary'}"
-    onclick="sortProductsByPrice('asc')"
-  >
-    Price (Low to High)
-  </button>
-  <button
-    class="btn"
-    th:classappend="${#strings.equals(param.sortBy, 'price') && #strings.equals(param.order, 'desc') ? 'btn-primary' : 'btn-secondary'}"
-    onclick="sortProductsByPrice('desc')"
-  >
-    Price (High to Low)
-  </button>
+    <option th:selected="${param.sortBy == null}" value="none">None</option>
+    <option
+      value="latest"
+      th:selected="${#strings.equals(param.sortBy, 'latest')}"
+    >
+      Latest
+    </option>
+    <option
+      value="price-asc"
+      th:selected="${#strings.equals(param.sortBy, 'price') && #strings.equals(param.order, 'asc')}"
+    >
+      Price (Low to High)
+    </option>
+    <option
+      value="price-desc"
+      th:selected="${#strings.equals(param.sortBy, 'price') && #strings.equals(param.order, 'desc')}"
+    >
+      Price (High to Low)
+    </option>
+  </select>
+  <div class="d-none d-lg-inline">
+    <button
+      class="btn me-2"
+      th:classappend="${#strings.equals(param.sortBy, 'latest') ? 'btn-primary' : 'btn-secondary'}"
+      onclick="sortProductsByLatest()"
+    >
+      Latest
+    </button>
+    <button
+      class="btn me-2"
+      th:classappend="${#strings.equals(param.sortBy, 'price') && #strings.equals(param.order, 'asc') ? 'btn-primary' : 'btn-secondary'}"
+      onclick="sortProductsByPrice('asc')"
+    >
+      Price (Low to High)
+    </button>
+    <button
+      class="btn me-2"
+      th:classappend="${#strings.equals(param.sortBy, 'price') && #strings.equals(param.order, 'desc') ? 'btn-primary' : 'btn-secondary'}"
+      onclick="sortProductsByPrice('desc')"
+    >
+      Price (High to Low)
+    </button>
+    <button
+      class="btn btn-danger"
+      onclick="unsortProducts()"
+      th:if="${param.sortBy != null}"
+    >
+      <div class="d-flex justify-content-center align-items-center">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          fill="currentColor"
+          class="bi bi-trash3-fill"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"
+          />
+        </svg>
+        <span class="ms-2">Clear</span>
+      </div>
+    </button>
+  </div>
 </div>
 
 <script th:inline="javascript" layout:fragment="productsSortByScripts()">
@@ -37,4 +85,21 @@
     currentURL.searchParams.set("order", order);
     window.location.href = currentURL.toString();
   }
+
+  function unsortProducts() {
+    const currentURL = new URL(window.location.href);
+    currentURL.searchParams.delete("sortBy");
+    currentURL.searchParams.delete("order");
+    window.location.href = currentURL.toString();
+  }
+
+  document
+    .querySelector("#sortBySelect")
+    .addEventListener("change", (event) => {
+      const selected = event.target.value;
+      if (selected === "none") unsortProducts();
+      else if (selected === "latest") sortProductsByLatest();
+      else if (selected === "price-asc") sortProductsByPrice("asc");
+      else if (selected === "price-desc") sortProductsByPrice("desc");
+    });
 </script>
