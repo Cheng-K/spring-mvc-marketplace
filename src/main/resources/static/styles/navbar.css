@@ -6,7 +6,9 @@
   object-fit: cover;
 }
 
-.dropdown-menu[data-bs-popper] {
-  left: auto;
-  right: 0;
+@media (min-width: 992px) {
+  .dropdown-menu[data-bs-popper] {
+    left: auto;
+    right: 0;
+  }
 }

@@ -1,14 +1,27 @@
 <div
   layout:fragment="categoryList(clearLink,availableCategories, selectedCategory)"
+  class="d-none d-lg-block"
 >
-  <div class="d-flex mb-2 justify-content-between">
-    <h4>Categories</h4>
+  <div class="d-flex mb-2 justify-content-between align-items-center">
+    <h5 class="m-0">Categories</h5>
     <a
-      class="btn btn-secondary"
+      class="text-danger"
       th:href="${clearLink}"
       th:if="${selectedCategory != null}"
-      >Clear selection</a
     >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-trash3-fill"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"
+        />
+      </svg>
+    </a>
   </div>
   <ul class="list-group">
     <li
@@ -20,3 +33,51 @@
     ></li>
   </ul>
 </div>
+
+<div
+  layout:fragment="categoryListSelect(clearLink,availableCategories, selectedCategory)"
+>
+  <span class="me-2">Category: </span>
+  <select
+    id="filterByCategory"
+    class="form-select d-inline-block"
+    aria-label="Select category to filter by"
+  >
+    <option th:selected="${selectedCategory == null}" value="all">All</option>
+    <option
+      th:each="category : ${availableCategories}"
+      th:text="${category.title}"
+      th:value="${category.id}"
+      th:selected="${category.id == selectedCategory}"
+    ></option>
+  </select>
+</div>
+
+<script th:inline="javascript" layout:fragment="categoryListScripts(baseLink)">
+  const baseLink = [[${baseLink}]]
+  function addClickListenerToCategoryList() {
+    const allCategoryListItems = document.querySelectorAll(
+      ".category-list-item"
+    );
+    allCategoryListItems.forEach((category) => {
+      category.addEventListener("click", (event) => {
+        const categoryId = category.getAttribute("data-category-id");
+        window.location.assign(`/products/categories/${categoryId}`);
+      });
+    });
+
+    const allCategorySelect = document.querySelector("#filterByCategory");
+    allCategorySelect.addEventListener("change", (e) => {
+      const value = e.target.value;
+      if (value === "all") {
+        window.location.assign(baseLink);
+      }
+      else {
+        window.location.assign(`${baseLink}/categories/${value}`)
+      }
+    }
+    );
+  }
+
+  addClickListenerToCategoryList();
+</script>

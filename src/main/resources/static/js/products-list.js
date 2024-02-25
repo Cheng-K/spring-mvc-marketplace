@@ -8,16 +8,6 @@ function addClickListenerToProductCards() {
   });
 }
 
-function addClickListenerToCategoryList() {
-  const allCategoryListItems = document.querySelectorAll(".category-list-item");
-  allCategoryListItems.forEach((category) => {
-    category.addEventListener("click", (event) => {
-      const categoryId = category.getAttribute("data-category-id");
-      window.location.assign(`/products/categories/${categoryId}`);
-    });
-  });
-}
-
 function calculateDaysAgoForProducts() {
   const allProductCards = document.querySelectorAll(".product-card");
   allProductCards.forEach((product) => {
@@ -36,4 +26,3 @@ function calculateDaysAgoForProducts() {
 
 calculateDaysAgoForProducts();
 addClickListenerToProductCards();
-addClickListenerToCategoryList();

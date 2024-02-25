@@ -1,0 +1,9 @@
+.category-list {
+  width: 20%;
+  display: none;
+}
+@media (min-width: 992px) {
+  .category-list {
+    display: block;
+  }
+}
