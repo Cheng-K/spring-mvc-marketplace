@@ -62,7 +62,7 @@
     allCategoryListItems.forEach((category) => {
       category.addEventListener("click", (event) => {
         const categoryId = category.getAttribute("data-category-id");
-        window.location.assign(`/products/categories/${categoryId}`);
+        window.location.assign(`${baseLink}/categories/${categoryId}?page=1`);
       });
     });
 
@@ -70,10 +70,10 @@
     allCategorySelect.addEventListener("change", (e) => {
       const value = e.target.value;
       if (value === "all") {
-        window.location.assign(baseLink);
+        window.location.assign(`${baseLink}?page=1`);
       }
       else {
-        window.location.assign(`${baseLink}/categories/${value}`)
+        window.location.assign(`${baseLink}/categories/${value}?page=1`)
       }
     }
     );

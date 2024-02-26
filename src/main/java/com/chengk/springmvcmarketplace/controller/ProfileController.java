@@ -202,4 +202,24 @@ public class ProfileController {
         return "profile/profiles-products-list";
     }
 
+    @GetMapping("/{userId}/products/categories/{categoryId}")
+    public String getMethodName(@PathVariable(name = "userId") Integer userId,
+            @PathVariable(name = "categoryId") Integer categoryId,
+            @RequestParam(name = "page", required = false) Integer page, Model model) {
+        Slice<ProductDto> products = null;
+        if (page == null || page <= 0) {
+            String redirect = MessageFormat.format("redirect:{0}",
+                    ServletUriComponentsBuilder.fromCurrentRequest().replaceQueryParam("page", 1).toUriString());
+            return redirect;
+        }
+        int requestedPageInDb = page - 1;
+
+        products = productsService.getUserProductsByCategoryId(categoryId, requestedPageInDb, userId);
+        List<CategoryDto> categories = categoryService.getAllCategories();
+        model.addAttribute("availableCategories", categories);
+        model.addAttribute("selectedCategory", categoryId);
+        model.addAttribute("products", products);
+        return "profile/profiles-products-list";
+    }
+
 }
