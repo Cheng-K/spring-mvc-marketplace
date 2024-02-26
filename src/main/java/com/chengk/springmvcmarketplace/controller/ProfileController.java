@@ -61,7 +61,7 @@ public class ProfileController {
                 found.getProfilePicturePath());
         model.addAttribute("editUser", editUser);
         model.addAttribute("user", found);
-        return "profiles-detail";
+        return "profile/profiles-detail";
 
     }
 
@@ -110,7 +110,7 @@ public class ProfileController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", currentUser);
             model.addAttribute("validatedErrors", true);
-            return "profiles-detail";
+            return "profile/profiles-detail";
         }
 
         currentUser.setUploadedProfilePicture(newUser.getUploadedProfilePicture());
@@ -158,8 +158,7 @@ public class ProfileController {
         model.addAttribute("products", products);
         List<CategoryDto> categories = categoryService.getAllCategories();
         model.addAttribute("availableCategories", categories);
-        model.addAttribute("linkPrefix", MessageFormat.format("/profiles/{0}/products", userId));
-        return "profiles-products-list";
+        return "profile/profiles-products-list";
     }
 
     @GetMapping("/{userId}/products/search")
@@ -182,15 +181,16 @@ public class ProfileController {
         }
         int requestedPageInDb = page - 1;
         if (sortBy != null && sortBy.equals("latest")) {
-            products = productsService.getUserProductsByQueryWithSort(query, Sort.by("listedOn").descending(),
+            products = productsService.getUserProductsByQueryOrderByLatest(query,
                     requestedPageInDb, userId);
+            System.out.println(products);
         } else if (sortBy != null && sortBy.equals("price")) {
             if (order != null && order.equals("desc")) {
-                products = productsService.getUserProductsByQueryWithSort(query, Sort.by("price").descending(),
-                        requestedPageInDb, userId);
+                products = productsService.getUserProductsByQueryOrderByPrice(query,
+                        requestedPageInDb, userId, false);
             } else {
-                products = productsService.getUserProductsByQueryWithSort(query, Sort.by("price").ascending(),
-                        requestedPageInDb, userId);
+                products = productsService.getUserProductsByQueryOrderByPrice(query,
+                        requestedPageInDb, userId, true);
             }
         } else {
             products = productsService.getUserProductsByQuery(query, requestedPageInDb, userId);
@@ -199,8 +199,7 @@ public class ProfileController {
         List<CategoryDto> categories = categoryService.getAllCategories();
         model.addAttribute("availableCategories", categories);
         model.addAttribute("products", products);
-        model.addAttribute("linkPrefix", MessageFormat.format("/profiles/{0}/products", userId));
-        return "profiles-products-list";
+        return "profile/profiles-products-list";
     }
 
 }
