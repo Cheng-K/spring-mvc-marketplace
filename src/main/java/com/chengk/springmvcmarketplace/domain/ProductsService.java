@@ -31,7 +31,9 @@ public interface ProductsService {
 
     Slice<ProductDto> getUserProductsByQuery(String query, int pageNumber, int userId);
 
-    Slice<ProductDto> getUserProductsByQueryWithSort(String query, Sort sort, int pageNumber, int userId);
+    Slice<ProductDto> getUserProductsByQueryOrderByLatest(String query, int pageNumber, int userId);
+
+    Slice<ProductDto> getUserProductsByQueryOrderByPrice(String query, int pageNumber, int userId, boolean ascending);
 
     Slice<ProductDto> getUserProductsByCategoryId(Integer categoryId, int pageNumber, int userId);
 

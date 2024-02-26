@@ -28,7 +28,28 @@ public interface ProductRepository
         List<Products> findBySellerIdAndTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContaining(
                         @Param("sellerId") Integer sellerId,
                         @Param("title") String title,
-                        @Param("description") String description, Pageable pageable);
+                        @Param("description") String description);
+
+        @Query("SELECT * FROM \"Products\" WHERE seller_id = :sellerId AND (UPPER(title) LIKE CONCAT('%',UPPER(:title),'%') OR UPPER(description) LIKE CONCAT('%',UPPER(:description),'%')) ORDER BY listed_on DESC")
+
+        List<Products> findBySellerIdAndTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContainingOrderByListedOnDesc(
+                        @Param("sellerId") Integer sellerId,
+                        @Param("title") String title,
+                        @Param("description") String description);
+
+        @Query("SELECT * FROM \"Products\" WHERE seller_id = :sellerId AND (UPPER(title) LIKE CONCAT('%',UPPER(:title),'%') OR UPPER(description) LIKE CONCAT('%',UPPER(:description),'%')) ORDER BY price DESC")
+
+        List<Products> findBySellerIdAndTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContainingOrderByPriceDesc(
+                        @Param("sellerId") Integer sellerId,
+                        @Param("title") String title,
+                        @Param("description") String description);
+
+        @Query("SELECT * FROM \"Products\" WHERE seller_id = :sellerId AND (UPPER(title) LIKE CONCAT('%',UPPER(:title),'%') OR UPPER(description) LIKE CONCAT('%',UPPER(:description),'%')) ORDER BY price ASC")
+
+        List<Products> findBySellerIdAndTitleIgnoreCaseContainingOrDescriptionIgnoreCaseContainingOrderByPriceAsc(
+                        @Param("sellerId") Integer sellerId,
+                        @Param("title") String title,
+                        @Param("description") String description);
 
         @Query("SELECT COUNT(*) FROM \"Products\" WHERE seller_id = :sellerId AND (UPPER(title) LIKE CONCAT('%',UPPER(:title),'%') OR UPPER(description) LIKE CONCAT('%',UPPER(:description),'%'))")
 
