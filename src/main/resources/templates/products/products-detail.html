@@ -12,36 +12,24 @@
   <body>
     <main layout:fragment="main" th:classappend="position-relative">
       <div
-        class="toast align-items-center text-bg-success border-0 top-0 start-50 translate-middle-x position-absolute"
-        role="alert"
-        id="toast"
-        aria-live="assertive"
-        aria-atomic="true"
-        th:if="${postRedirectMessage != null}"
-      >
-        <div class="d-flex">
-          <div class="toast-body" th:text="${postRedirectMessage}"></div>
-          <button
-            type="button"
-            class="btn-close btn-close-white me-2 m-auto"
-            data-bs-dismiss="toast"
-            aria-label="Close"
-          ></button>
-        </div>
-      </div>
-      <div class="container mt-5" th:object="${product}">
+        class="top-0 start-50 translate-middle-x position-absolute"
+        layout:insert="~{components/toast :: toast(postRedirectMessage=${postRedirectMessage})}"
+      ></div>
+      <div class="container h-100" th:object="${product}">
         <div class="row">
           <div
-            class="col-md-6 pe-5 d-flex justify-content-center align-items-center"
+            class="col-12 col-lg-6 pe-5 d-flex justify-content-center align-items-center mb-lg-0 mb-3"
           >
             <img th:src=@{/images/products/{imageFile}(imageFile=*{image})}
             class="img-fluid product-img" alt="Product Image" />
           </div>
-          <div class="col-md-6">
-            <h2 class="my-3" th:text="*{title}">Product Title</h2>
-            <h3 class="my-3" th:text="|RM*{price}|">$ Product Price</h3>
+          <div class="col-12 col-lg-6">
+            <h2 class="mb-3" th:text="*{title}">Product Title</h2>
+            <h3 class="mb-3" th:text="|RM*{price}|">$ Product Price</h3>
             <h5>Description</h5>
-            <pre th:text="*{description}" class="fs-5">Product Description</pre>
+            <p th:text="*{description}" class="fs-5 product-description">
+              Product Description
+            </p>
             <h5>Category</h5>
             <p class="text-muted fs-5" th:text="*{category.title}">Category</p>
             <h5>Condition</h5>

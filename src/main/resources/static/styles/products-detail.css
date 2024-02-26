@@ -1,11 +1,13 @@
-pre {
-  font-family: var(--bs-body-font-family);
+.product-description {
+  white-space: pre-wrap;
+  max-height: 350px;
+  overflow: scroll;
 }
 
 .product-img {
-  width: 85%;
-  height: 85%;
-  object-fit: contain;
+  width: 100%;
+  max-width: 450px;
+  object-fit: cover;
 }
 
 .seller-img {
