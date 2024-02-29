@@ -1,5 +1,6 @@
 package com.chengk.springmvcmarketplace.domain;
 
+import com.chengk.springmvcmarketplace.model.dto.CartDto;
 import com.chengk.springmvcmarketplace.model.dto.UserDto;
 
 public interface UserService {
@@ -20,4 +21,6 @@ public interface UserService {
     UserDto getUserByUsernameAndEmail(String username, String email);
 
     boolean verifyPasswordResetToken(Integer id, String token);
+
+    CartDto getUserShoppingCart(Integer userId);
 }

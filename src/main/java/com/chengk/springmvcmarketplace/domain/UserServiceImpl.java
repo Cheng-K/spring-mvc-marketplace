@@ -5,23 +5,32 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.chengk.springmvcmarketplace.model.dto.CartDto;
 import com.chengk.springmvcmarketplace.model.dto.UserDto;
+import com.chengk.springmvcmarketplace.model.entity.Cart;
 import com.chengk.springmvcmarketplace.model.entity.Users;
+import com.chengk.springmvcmarketplace.repository.CartRepository;
 import com.chengk.springmvcmarketplace.repository.UsersRepository;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private UsersRepository usersRepository;
+    private CartRepository cartRepository;
     private StorageService storageService;
     private DtoConverter<Users, UserDto> userDtoConverter;
+    private DtoConverter<Cart, CartDto> cartDtoConverter;
     private TokenService tokenService;
 
-    public UserServiceImpl(UsersRepository usersRepository, StorageService storageService,
-            DtoConverter<Users, UserDto> userDtoConverter, TokenService tokenService) {
+    public UserServiceImpl(UsersRepository usersRepository, CartRepository cartRepository,
+            StorageService storageService,
+            DtoConverter<Users, UserDto> userDtoConverter, DtoConverter<Cart, CartDto> cartDtoConverter,
+            TokenService tokenService) {
         this.usersRepository = usersRepository;
+        this.cartRepository = cartRepository;
         this.storageService = storageService;
         this.userDtoConverter = userDtoConverter;
+        this.cartDtoConverter = cartDtoConverter;
         this.tokenService = tokenService;
     }
 
@@ -123,4 +132,13 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
+
+    @Override
+    public CartDto getUserShoppingCart(Integer userId) {
+        Optional<Cart> result = cartRepository.findById(userId);
+        if (result.isEmpty())
+            return null;
+        return cartDtoConverter.convertToDto(result.get());
+    }
+
 }

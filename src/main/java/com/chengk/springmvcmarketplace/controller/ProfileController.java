@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +28,7 @@ import com.chengk.springmvcmarketplace.domain.CategoryService;
 import com.chengk.springmvcmarketplace.domain.ProductsService;
 import com.chengk.springmvcmarketplace.domain.UserService;
 import com.chengk.springmvcmarketplace.domain.exceptions.AppResponseException;
+import com.chengk.springmvcmarketplace.model.dto.CartDto;
 import com.chengk.springmvcmarketplace.model.dto.CategoryDto;
 import com.chengk.springmvcmarketplace.model.dto.HttpErrorDto;
 import com.chengk.springmvcmarketplace.model.dto.LoggedInUser;
@@ -203,7 +205,7 @@ public class ProfileController {
     }
 
     @GetMapping("/{userId}/products/categories/{categoryId}")
-    public String getMethodName(@PathVariable(name = "userId") Integer userId,
+    public String getProductsByCategory(@PathVariable(name = "userId") Integer userId,
             @PathVariable(name = "categoryId") Integer categoryId,
             @RequestParam(name = "page", required = false) Integer page, Model model) {
         Slice<ProductDto> products = null;
@@ -220,6 +222,13 @@ public class ProfileController {
         model.addAttribute("selectedCategory", categoryId);
         model.addAttribute("products", products);
         return "profile/profiles-products-list";
+    }
+
+    @GetMapping("/cart")
+    public String getShoppingCart(@AuthenticationPrincipal LoggedInUser principal, Model model) {
+        CartDto carts = userService.getUserShoppingCart(principal.getId());
+        model.addAttribute("products", carts.getProducts());
+        return "profile/profiles-cart";
     }
 
 }
