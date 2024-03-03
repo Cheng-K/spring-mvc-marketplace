@@ -79,12 +79,31 @@
                 th:if="${!#strings.equals(#authentication.name, product.seller.username)}"
                 >Buy now</a
               >
-              <a
-                th:href="@{#}"
-                class="btn btn-outline-secondary flex-grow-1 me-3"
+              <div
+                class="flex-grow-1 me-3"
                 th:if="${!#strings.equals(#authentication.name, product.seller.username)}"
-                >Add to cart</a
               >
+                <form
+                  th:action="@{/profiles/cart?productId={productId}(productId = ${product.id})}"
+                  th:if="${!addedToCart}"
+                  method="post"
+                  id="addToCartForm"
+                >
+                  <button type="submit" class="btn btn-outline-secondary w-100">
+                    Add to cart
+                  </button>
+                </form>
+                <form
+                  th:action="@{/profiles/cart?productId={productId}(productId = ${product.id})}"
+                  th:method="delete"
+                  th:if="${addedToCart}"
+                  id="removeFromCartForm"
+                >
+                  <button type="submit" class="btn btn-outline-secondary w-100">
+                    Delete from cart
+                  </button>
+                </form>
+              </div>
               <a
                 th:href="@{/products/{id}/edit(id = ${product.id})}"
                 class="btn btn-secondary flex-grow-1 me-3"
@@ -106,11 +125,20 @@
     </main>
   </body>
   <div layout:fragment="scripts">
+    <script
+      th:inline="javascript"
+      layout:insert="~{components/toast :: toastScripts()}"
+    ></script>
     <script th:inline="javascript">
-      const toast = document.querySelector(".toast");
-      if (toast != null) {
-        const bsToast = bootstrap.Toast.getOrCreateInstance(toast);
-        bsToast.show();
+      const form =
+        document.querySelector("#addToCartForm") ||
+        document.querySelector("#removeFromCartForm");
+      if (form !== null) {
+        let currentLink = new URL(window.location.href);
+        currentLink.pathname = form.getAttribute("action");
+        currentLink.searchParams.append("redirect", window.location.href);
+        console.log(currentLink);
+        form.setAttribute("action", currentLink.toString());
       }
     </script>
   </div>
