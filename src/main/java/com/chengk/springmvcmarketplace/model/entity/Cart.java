@@ -31,9 +31,8 @@ public class Cart {
         return products;
     }
 
-    public void addProduct(Products product) {
-        products.add(new CartProductRef(product.getId()));
-
+    public void addProduct(Integer productId) {
+        products.add(new CartProductRef(productId));
     }
 
 }
