@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,6 +28,7 @@ import com.chengk.springmvcmarketplace.domain.UserService;
 import com.chengk.springmvcmarketplace.domain.exceptions.AppResponseException;
 import com.chengk.springmvcmarketplace.model.dto.CategoryDto;
 import com.chengk.springmvcmarketplace.model.dto.HttpErrorDto;
+import com.chengk.springmvcmarketplace.model.dto.LoggedInUser;
 import com.chengk.springmvcmarketplace.model.dto.ProductDto;
 import com.chengk.springmvcmarketplace.model.dto.UserDto;
 import com.chengk.springmvcmarketplace.model.value_objects.Condition;
@@ -113,12 +115,14 @@ public class ProductsController {
     }
 
     @GetMapping("/{productId}")
-    public String getProductDetails(@PathVariable("productId") Integer productId, Model model) {
+    public String getProductDetails(@PathVariable("productId") Integer productId, Model model,
+            @AuthenticationPrincipal LoggedInUser user) {
         ProductDto productDto = productsService.getProductById(productId);
         if (productDto == null) {
             throw new AppResponseException(HttpErrorDto.createProductNotFoundError());
         }
         model.addAttribute("product", productDto);
+        model.addAttribute("addedToCart", userService.productInUserCart(user.getId(), productId));
         return "products/products-detail";
     }
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.chengk.springmvcmarketplace.model.dto.CartDto;
 import com.chengk.springmvcmarketplace.model.dto.UserDto;
 import com.chengk.springmvcmarketplace.model.entity.Cart;
+import com.chengk.springmvcmarketplace.model.entity.CartProductRef;
 import com.chengk.springmvcmarketplace.model.entity.Users;
 import com.chengk.springmvcmarketplace.repository.CartRepository;
 import com.chengk.springmvcmarketplace.repository.UsersRepository;
@@ -139,6 +140,33 @@ public class UserServiceImpl implements UserService {
         if (result.isEmpty())
             return null;
         return cartDtoConverter.convertToDto(result.get());
+    }
+
+    @Override
+    public void addProductToShoppingCart(Integer userId, Integer productId) {
+        Optional<Cart> result = cartRepository.findById(userId);
+        if (result.isPresent()) {
+            result.get().addProduct(productId);
+            cartRepository.save(result.get());
+        }
+    }
+
+    @Override
+    public boolean productInUserCart(Integer userId, Integer productId) {
+        Optional<Cart> result = cartRepository.findById(userId);
+        if (result.isPresent()) {
+            return result.get().getProducts().contains(new CartProductRef(productId));
+        }
+        return false;
+    }
+
+    @Override
+    public void removeProductFromShoppingCart(Integer userId, Integer productId) {
+        Optional<Cart> result = cartRepository.findById(userId);
+        if (result.isPresent()) {
+            result.get().getProducts().remove(new CartProductRef(productId));
+            cartRepository.save(result.get());
+        }
     }
 
 }

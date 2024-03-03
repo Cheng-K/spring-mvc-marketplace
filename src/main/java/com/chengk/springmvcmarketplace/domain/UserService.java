@@ -23,4 +23,10 @@ public interface UserService {
     boolean verifyPasswordResetToken(Integer id, String token);
 
     CartDto getUserShoppingCart(Integer userId);
+
+    void addProductToShoppingCart(Integer userId, Integer productId);
+
+    boolean productInUserCart(Integer userId, Integer productId);
+
+    void removeProductFromShoppingCart(Integer userId, Integer productId);
 }

@@ -3,14 +3,15 @@ package com.chengk.springmvcmarketplace.domain;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
+import com.chengk.springmvcmarketplace.model.dto.CartDto;
 import com.chengk.springmvcmarketplace.model.dto.ProductDto;
 import com.chengk.springmvcmarketplace.model.entity.Products;
 import com.chengk.springmvcmarketplace.repository.ProductRepository;
@@ -191,6 +192,15 @@ public class ProductsServiceImpl implements ProductsService {
         Slice<Products> products = new SliceImpl<>(result,
                 pageRequest.withPage(pageNumber), totalCount > itemsCount);
         return products.map((product) -> productDtoConverter.convertToDto(product));
+    }
+
+    @Override
+    public CartDto getUserShoppingCart(Integer userId) {
+        List<Products> result = productRepository.getShoppingCart(userId);
+        List<ProductDto> productDtos = result.stream().map(product -> productDtoConverter.convertToDto(product))
+                .collect(Collectors.toList());
+
+        return new CartDto(userId, productDtos);
     }
 
 }

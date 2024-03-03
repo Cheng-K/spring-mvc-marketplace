@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +37,7 @@ import com.chengk.springmvcmarketplace.model.dto.ProductDto;
 import com.chengk.springmvcmarketplace.model.dto.UserDto;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequestMapping("/profiles")
@@ -229,6 +231,24 @@ public class ProfileController {
         CartDto carts = userService.getUserShoppingCart(principal.getId());
         model.addAttribute("products", carts.getProducts());
         return "profile/profiles-cart";
+    }
+
+    @PostMapping("/cart")
+    public String postProductShoppingCart(@RequestParam("productId") Integer productId,
+            @RequestParam("redirect") String link,
+            @AuthenticationPrincipal LoggedInUser principal, RedirectAttributes redirectAttributes) {
+        userService.addProductToShoppingCart(principal.getId(), productId);
+        redirectAttributes.addFlashAttribute("postRedirectMessage", "Product added to cart successfully");
+        return "currentView";
+    }
+
+    @DeleteMapping("/cart")
+    public String deleteProductShoppingCart(@RequestParam("productId") Integer productId,
+            @RequestParam("redirect") String link,
+            @AuthenticationPrincipal LoggedInUser principal, RedirectAttributes redirectAttributes) {
+        userService.removeProductFromShoppingCart(principal.getId(), productId);
+        redirectAttributes.addFlashAttribute("postRedirectMessage", "Product removed from cart successfully");
+        return "currentView";
     }
 
 }
