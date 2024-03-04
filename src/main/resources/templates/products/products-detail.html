@@ -127,18 +127,16 @@
   <div layout:fragment="scripts">
     <script
       th:inline="javascript"
-      layout:insert="~{components/toast :: toastScripts()}"
+      layout:replace="~{components/toast :: toastScripts()}"
     ></script>
     <script th:inline="javascript">
       const form =
         document.querySelector("#addToCartForm") ||
         document.querySelector("#removeFromCartForm");
       if (form !== null) {
-        let currentLink = new URL(window.location.href);
-        currentLink.pathname = form.getAttribute("action");
-        currentLink.searchParams.append("redirect", window.location.href);
-        console.log(currentLink);
-        form.setAttribute("action", currentLink.toString());
+        let currentLink = form.getAttribute("action");
+        currentLink += `&redirect=${window.location.href}`;
+        form.setAttribute("action", currentLink);
       }
     </script>
   </div>

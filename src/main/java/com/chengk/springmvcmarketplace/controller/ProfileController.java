@@ -37,7 +37,6 @@ import com.chengk.springmvcmarketplace.model.dto.ProductDto;
 import com.chengk.springmvcmarketplace.model.dto.UserDto;
 
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequestMapping("/profiles")
@@ -237,9 +236,10 @@ public class ProfileController {
     public String postProductShoppingCart(@RequestParam("productId") Integer productId,
             @RequestParam("redirect") String link,
             @AuthenticationPrincipal LoggedInUser principal, RedirectAttributes redirectAttributes) {
+        System.out.println("hi");
         userService.addProductToShoppingCart(principal.getId(), productId);
         redirectAttributes.addFlashAttribute("postRedirectMessage", "Product added to cart successfully");
-        return "currentView";
+        return "redirect:" + link;
     }
 
     @DeleteMapping("/cart")
@@ -248,7 +248,7 @@ public class ProfileController {
             @AuthenticationPrincipal LoggedInUser principal, RedirectAttributes redirectAttributes) {
         userService.removeProductFromShoppingCart(principal.getId(), productId);
         redirectAttributes.addFlashAttribute("postRedirectMessage", "Product removed from cart successfully");
-        return "currentView";
+        return "redirect:" + link;
     }
 
 }
