@@ -1,0 +1,13 @@
+.list-item-image {
+  width: 350px;
+  object-fit: cover;
+  aspect-ratio: 1/1;
+}
+
+.product-profile-pic {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  object-fit: cover;
+}

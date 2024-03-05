@@ -7,7 +7,6 @@
 >
   <head>
     <title>Shopping Cart</title>
-    <link rel="stylesheet" th:href="@{/styles/products-list.css}" />
     <link rel="stylesheet" th:href="@{/styles/navbar.css}" />
   </head>
   <body>
@@ -22,15 +21,14 @@
       ></div>
       <div class="container-fluid px-5">
         <div
-          class="row"
-          layout:insert="~{components/products-gallery :: productGallery(products=${products})}"
+          layout:insert="~{components/products-list-view :: productListView(products=${products})}"
         ></div>
       </div>
     </main>
   </body>
   <div layout:fragment="scripts">
     <script
-      layout:replace="~{components/products-gallery :: productGalleryScripts()}"
+      layout:replace="~{components/products-list-item :: productListItemScripts()}"
     ></script>
     <script
       th:inline="javascript"
