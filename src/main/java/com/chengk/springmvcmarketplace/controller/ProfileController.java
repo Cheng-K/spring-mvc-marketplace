@@ -228,7 +228,10 @@ public class ProfileController {
     @GetMapping("/cart")
     public String getShoppingCart(@AuthenticationPrincipal LoggedInUser principal, Model model) {
         CartDto carts = userService.getUserShoppingCart(principal.getId());
+        double totalPrice = carts.getProducts().stream().map(product -> product.getPrice()).reduce(0.0,
+                (currentTotal, product) -> currentTotal + product);
         model.addAttribute("products", carts.getProducts());
+        model.addAttribute("totalCheckoutPrice", (Double) totalPrice);
         return "profile/profiles-cart";
     }
 
