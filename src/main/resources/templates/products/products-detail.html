@@ -25,7 +25,9 @@
           </div>
           <div class="col-12 col-lg-6">
             <h2 class="mb-3" th:text="*{title}">Product Title</h2>
-            <h3 class="mb-3" th:text="|RM*{price}|">$ Product Price</h3>
+            <h3 class="mb-3" th:text="|RM*{#numbers.formatDecimal(price,1,2)}|">
+              $ Product Price
+            </h3>
             <h5>Description</h5>
             <p th:text="*{description}" class="fs-5 product-description">
               Product Description

@@ -35,7 +35,10 @@
     <h5 class="card-title product-card-title" th:text="${product.title}">
       Product 1
     </h5>
-    <p class="card-text mb-2 fw-bold" th:text="|RM${product.price}|"></p>
+    <p
+      class="card-text mb-2 fw-bold"
+      th:text="|RM${#numbers.formatDecimal(product.price, 1, 2)}|"
+    ></p>
     <div th:switch="${product.condition.name()}">
       <p th:case="'LIKE_NEW'" class="m-0">Like new</p>
       <p th:case="'USED'" class="m-0">Used</p>

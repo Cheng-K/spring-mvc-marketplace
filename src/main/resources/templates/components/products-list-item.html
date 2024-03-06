@@ -31,9 +31,12 @@
         class="list-item-image"
       />
     </div>
-    <div class="flex-lg-grow-1">
+    <div class="flex-lg-grow-1 me-4">
       <h5 th:text="${product.title}">Product 1</h5>
-      <p class="card-text mb-2 fw-bold" th:text="|RM${product.price}|"></p>
+      <p
+        class="card-text mb-2 fw-bold"
+        th:text="|RM${#numbers.formatDecimal(product.price, 0, 2)}|"
+      ></p>
     </div>
     <div class="d-lg-flex">
       <form th:action="@{#}" class="me-lg-2 mb-2">
