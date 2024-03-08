@@ -66,7 +66,5 @@ Cheng Kei Ong - chengkei.ong@outlook.com
 
 Project Link: [here](https://github.com/Cheng-K/spring-mvc-marketplace)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 [linkedin-shield]: https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white
 [linkedin-url]: https://www.linkedin.com/in/chengkei-ong
