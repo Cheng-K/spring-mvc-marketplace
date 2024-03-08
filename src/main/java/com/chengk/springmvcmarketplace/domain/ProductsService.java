@@ -3,7 +3,6 @@ package com.chengk.springmvcmarketplace.domain;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 
-import com.chengk.springmvcmarketplace.model.dto.CartDto;
 import com.chengk.springmvcmarketplace.model.dto.ProductDto;
 
 public interface ProductsService {
@@ -38,5 +37,4 @@ public interface ProductsService {
 
     Slice<ProductDto> getUserProductsByCategoryId(Integer categoryId, int pageNumber, int userId);
 
-    CartDto getUserShoppingCart(Integer userId);
 }

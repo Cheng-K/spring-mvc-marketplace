@@ -194,13 +194,4 @@ public class ProductsServiceImpl implements ProductsService {
         return products.map((product) -> productDtoConverter.convertToDto(product));
     }
 
-    @Override
-    public CartDto getUserShoppingCart(Integer userId) {
-        List<Products> result = productRepository.getShoppingCart(userId);
-        List<ProductDto> productDtos = result.stream().map(product -> productDtoConverter.convertToDto(product))
-                .collect(Collectors.toList());
-
-        return new CartDto(userId, productDtos);
-    }
-
 }
